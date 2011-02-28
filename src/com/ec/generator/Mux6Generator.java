@@ -14,10 +14,19 @@ import com.ec.node.terminalNode.mux6.D2;
 import com.ec.node.terminalNode.mux6.D3;
 
 public class Mux6Generator extends Generator {
+	
 	private static final int resMask6 = 8;
-	private static final int addrShift = 4;
 
-	public static Node randomTerminal(){
+	private static final int addrShift = 4;
+	
+	public Mux6Generator(){}
+	
+	public Mux6Generator(float probability) {
+		Generator.growStopProbability = probability;
+	}
+	
+	@Override
+	public Node getRandomTerminal() {
 		switch (random.nextInt(6)) {
 		case 0:
 			return new A0();
@@ -35,8 +44,9 @@ public class Mux6Generator extends Generator {
 			return new A0();
 		}
 	}
-	
-	public static Node fullTree(int depth){
+		
+	@Override
+	public Node fullTree(int depth) {
 		if (depth > 0) {
 			switch (random.nextInt(4)) {
 			case 0:
@@ -53,69 +63,51 @@ public class Mux6Generator extends Generator {
 			}
 		} 
 		else {
-			return randomTerminal();
+			return getRandomTerminal();
 		}
 	}
 	
-	public static Node growTree(int depth){
+	@Override
+	public Node growTree(int depth) {
 		if (depth > 0) {
 			switch (random.nextInt(4)) {
 			case 0:
-				if (growStopProbability < random.nextDouble()){
+				if (Generator.growStopProbability < random.nextDouble()){
 					return new NotNode(growTree(depth - 1));
 				} else {
-					return randomTerminal();
+					return getRandomTerminal();
 				}
 			case 1:
-				if (Mux6Generator.growStopProbability < random.nextDouble()){
+				if (Generator.growStopProbability < random.nextDouble()){
 					return new OrNode(growTree(depth - 1), growTree(depth - 1));
 				} else {
-					return randomTerminal();
+					return getRandomTerminal();
 				}
 			case 2:
-				if (growStopProbability < random.nextDouble()){
+				if (Generator.growStopProbability < random.nextDouble()){
 					return new AndNode(growTree(depth - 1), growTree(depth - 1));
 				} else {
-					return randomTerminal();
+					return getRandomTerminal();
 				}
 			case 3:
-				if (growStopProbability < random.nextDouble()){
+				if (Generator.growStopProbability < random.nextDouble()){
 					return new IfNode(growTree(depth - 1), growTree(depth - 1), growTree(depth - 1));
 				} else {
-					return randomTerminal();
+					return getRandomTerminal();
 				}
 			default: // This should NEVER happen!!
 				return new A0();
 			}
 		} 
 		else {
-			return randomTerminal();
+			return getRandomTerminal();
 		}
 	}
 	
-	//TODO: Refactor
-	public static boolean[] magic(){
-		boolean[] arr = new boolean[64];
-		for(int i = 0; i < 64; i ++){
-			arr[i] = kamil(i);
-		}
-		return arr;
-	}
-	
-	//TODO: Refactor
-	private static boolean kamil(int input){
-		int addr = input >> addrShift;
-		int invaddr = 3 - addr;
-		int resmask = resMask6 >> addr;
-		int val = input & resmask;
-		int res = val >> invaddr;
-		return res != 0;
-	}
-	
-	
-	public static Individual fitness(Node node){
+	@Override
+	public Individual fitness(Node node) {
 		int count = 0;
-		boolean[] actualAnswer = magic();
+		boolean[] actualAnswer = getTrueResult();
 		
 		for(int i = 0; i < actualAnswer.length; i++){
 			if(actualAnswer[i] == node.eval(i)){
@@ -123,5 +115,22 @@ public class Mux6Generator extends Generator {
 			}
 		}
 		return new Individual(node, count/64f);
+	}
+
+	private boolean[] getTrueResult(){
+		boolean[] arr = new boolean[64];
+		for(int i = 0; i < 64; i ++){
+			arr[i] = computeResult(i);
+		}
+		return arr;
+	}
+
+	private boolean computeResult(int input){
+		int addr = input >> addrShift;
+		int invaddr = 3 - addr;
+		int resmask = resMask6 >> addr;
+		int val = input & resmask;
+		int res = val >> invaddr;
+		return res != 0;
 	}
 }
