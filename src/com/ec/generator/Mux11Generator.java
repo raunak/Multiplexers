@@ -1,3 +1,19 @@
+/* 
+ * Copyright (c) 2011 Raunak Gupta; Kamil Olesiejuk
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
 package com.ec.generator;
 
 import com.ec.Individual;
@@ -9,10 +25,13 @@ import com.ec.node.functionNode.OrNode;
 import com.ec.node.terminalNode.mux11.*;
 import com.ec.node.terminalNode.mux6.A0;
 
+/**
+ * @version 1.0
+ */
 public class Mux11Generator extends Generator {
-	//TODO: Update MASK!!
-	private static final int resMask6 = 8;
-	private static final int addrShift = 4;
+
+	private static final int resMask = 128;
+	private static final int addrShift = 8;
 
 	public Mux11Generator(){}
 	
@@ -132,8 +151,8 @@ public class Mux11Generator extends Generator {
 
 	private boolean computeResult(int input){
 		int addr = input >> addrShift;
-		int invaddr = 3 - addr;
-		int resmask = resMask6 >> addr;
+		int invaddr = 7 - addr;
+		int resmask = resMask >> addr;
 		int val = input & resmask;
 		int res = val >> invaddr;
 		return res != 0;

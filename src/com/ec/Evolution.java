@@ -1,15 +1,30 @@
+/* 
+ * Copyright (c) 2011 Raunak Gupta; Kamil Olesiejuk
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ */
 package com.ec;
 
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Vector;
 
+import com.ec.generator.Mux11Generator;
 import com.ec.generator.Mux6Generator;
 import com.ec.node.Node;
 
 /**
- * 
- * @author raunak
  * @version 1.0
  */
 public class Evolution {
@@ -41,6 +56,11 @@ public class Evolution {
 	/** Holds x number of individuals, where x refers to the population size.*/
 	private Individual[] population;
 	
+	/** <code>Mux6Generator</code> object */
+	private Mux6Generator mux6;
+	
+	/** <code>Mux11Generator</code> object */
+	private Mux11Generator mux11;
 	
 	public Evolution(int type){
 		this.evolutionType = type;
@@ -67,8 +87,17 @@ public class Evolution {
 	
 	public void evolve(){
 		generatePopulation();
-		individual = getSortedPopulation()[0];
 		
+		if(evolutionType == EvolutionType.MUX6){
+			evolveMux6();
+		} else if (evolutionType == EvolutionType.MUX11){
+			evolveMux11();
+		}
+	}
+	
+	private void evolveMux6(){
+		individual = getBestIndividual();
+
 		while(individual.getFitness() != 1.0){
 			System.out.println("Generation : " + currGen + " Individual: " + individual.toString());
 			
@@ -80,8 +109,34 @@ public class Evolution {
 				//Perform selection
 				selectedIndividuals = selection();
 				
-				newPopulation[i] = Mux6Generator.fitness(mutate(selectedIndividuals[0].getNode()));
-				newPopulation[i+1] = Mux6Generator.fitness(mutate(selectedIndividuals[0].getNode()));
+				newPopulation[i] = mux6.fitness(mutate(selectedIndividuals[0].getNode()));
+				newPopulation[i+1] = mux6.fitness(mutate(selectedIndividuals[0].getNode()));
+			}
+			
+			population = newPopulation;
+			if(getSortedPopulation()[0].getFitness() > individual.getFitness()){
+				individual = getSortedPopulation()[0];
+			}
+			currGen++;
+		}
+	}
+	
+	private void evolveMux11(){
+		individual = getBestIndividual();
+
+		while(individual.getFitness() != 1.0){
+			System.out.println("Generation : " + currGen + " Individual: " + individual.toString());
+			
+			Individual[] selectedIndividuals;
+			Individual[] newPopulation = new Individual[populationSize];
+			
+			for(int i = 0; i < populationSize; i+=2){
+				
+				//Perform selection
+				selectedIndividuals = selection();
+				
+				newPopulation[i] = mux11.fitness(mutate(selectedIndividuals[0].getNode()));
+				newPopulation[i+1] = mux11.fitness(mutate(selectedIndividuals[0].getNode()));
 			}
 			
 			population = newPopulation;
@@ -94,8 +149,10 @@ public class Evolution {
 	
 	private void generatePopulation(){
 		if(evolutionType == EvolutionType.MUX6){
+			mux6 = new Mux6Generator();
 			generateMux6Population();
 		} else if (evolutionType == EvolutionType.MUX11){
+			mux11 = new Mux11Generator();
 			generateMux11Population();
 		}
 	}
@@ -108,21 +165,38 @@ public class Evolution {
 			int i = 0;
 			while(true){
 				//Grow Tree
-				population[i] = Mux6Generator.fitness(Mux6Generator.growTree(maxDepth));
-				population[i+1] = Mux6Generator.fitness(Mux6Generator.growTree(tDepth1));
-				population[i+2] = Mux6Generator.fitness(Mux6Generator.growTree(tDepth2));
+				population[i] = mux6.fitness(mux6.growTree(maxDepth));
+				population[i+1] = mux6.fitness(mux6.growTree(tDepth1));
+				population[i+2] = mux6.fitness(mux6.growTree(tDepth1));
 				
 				//Full Tree
-				population[i+3] = Mux6Generator.fitness(Mux6Generator.fullTree(maxDepth));
-				population[i+4] = Mux6Generator.fitness(Mux6Generator.fullTree(tDepth1));
-				population[i+5] = Mux6Generator.fitness(Mux6Generator.fullTree(tDepth2));
+				population[i+3] = mux6.fitness(mux6.fullTree(maxDepth));
+				population[i+4] = mux6.fitness(mux6.fullTree(tDepth1));
+				population[i+5] = mux6.fitness(mux6.fullTree(tDepth2));
 				i+=6;
 			}
 		} catch (IndexOutOfBoundsException iob){}
 	}
 	
-	//TODO: Implement this
 	private void generateMux11Population(){
+		int tDepth1 = maxDepth--;
+		int tDepth2 = maxDepth - 2;
+		
+		try{ //for performance; otherwise needs checks.
+			int i = 0;
+			while(true){
+				//Grow Tree
+				population[i] = mux11.fitness(mux11.growTree(maxDepth));
+				population[i+1] = mux11.fitness(mux11.growTree(tDepth1));
+				population[i+2] = mux11.fitness(mux11.growTree(tDepth1));
+				
+				//Full Tree
+				population[i+3] = mux11.fitness(mux11.fullTree(maxDepth));
+				population[i+4] = mux11.fitness(mux11.fullTree(tDepth1));
+				population[i+5] = mux11.fitness(mux11.fullTree(tDepth2));
+				i+=6;
+			}
+		} catch (IndexOutOfBoundsException iob){}
 	}
 	
 	//TODO: Implement this
@@ -143,7 +217,7 @@ public class Evolution {
 	private Node mutateMux6(Node node){
 		Vector<Node> enumeration = node.enumerate();
 		if(enumeration == null){
-			return Mux6Generator.growTree(maxDepth);
+			return mux6.growTree(maxDepth);
 		} else{
 			int randomPoint = random.nextInt(enumeration.size());
 			Node parentNode = enumeration.get(randomPoint);
@@ -157,14 +231,14 @@ public class Evolution {
 			int childCountForParent = parentNode.getChildren().size();
 			
 			if(childCountForParent == 1){
-				parentNode.children.set(0, Mux6Generator.growTree(depth));
+				parentNode.children.set(0, mux6.growTree(depth));
 			} else if (childCountForParent == 2){
-				parentNode.children.set(0, Mux6Generator.growTree(depth));
-				parentNode.children.set(1, Mux6Generator.growTree(depth));
+				parentNode.children.set(0, mux6.growTree(depth));
+				parentNode.children.set(1, mux6.growTree(depth));
 			} else if (childCountForParent == 3){
-				parentNode.children.set(0, Mux6Generator.growTree(depth));
-				parentNode.children.set(1, Mux6Generator.growTree(depth));
-				parentNode.children.set(2, Mux6Generator.growTree(depth));
+				parentNode.children.set(0, mux6.growTree(depth));
+				parentNode.children.set(1, mux6.growTree(depth));
+				parentNode.children.set(2, mux6.growTree(depth));
 			}
 
 			return node;
@@ -195,14 +269,22 @@ public class Evolution {
 		return selectedIndividuals;
 	}
 	
-	private Individual[] getPopulation(){
-		return population;
-	}
-	
 	private Individual[] getSortedPopulation(){
 		Individual[] individuals = population.clone();
 		Arrays.sort(individuals);
 		return individuals;
+	}
+	
+	private Individual getBestIndividual(){
+		Individual bestIndividual = population[0];
+		
+		for(int i = 0; i < populationSize; i++){
+			if(population[i].getFitness() > bestIndividual.getFitness()){
+				bestIndividual = population[i];
+			}
+		}
+		
+		return bestIndividual;
 	}
 
 	class EvolutionType{
