@@ -25,10 +25,19 @@ import com.ec.node.Node;
  */
 public class IfNode extends ThreeChildNode{
 	
-	public IfNode(Node condition, Node leftChild, Node rightChild){
+	public IfNode(){
 		children = new Vector<Node>(3);
-		children.add(0, condition);
-		children.add(1, leftChild);
+	}
+	
+	public IfNode(Node node){
+		this.parent = node;
+		children = new Vector<Node>(3);
+	}
+	
+	public IfNode(Node leftChild, Node middleChild, Node rightChild){
+		children = new Vector<Node>(3);
+		children.add(0, leftChild);
+		children.add(1, middleChild);
 		children.add(2, rightChild);
 	}
 	

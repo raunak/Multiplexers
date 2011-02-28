@@ -25,10 +25,15 @@ import com.ec.node.Node;
  */
 public class NotNode extends OneChildNode{
 	
-	public NotNode(Node node){
+	public NotNode(){
 		children = new Vector<Node>(1);
-		children.add(node);
 	}
+	
+	public NotNode(Node node){
+		this.parent = node;
+		children = new Vector<Node>(1);
+	}
+	
 	
 	@Override
 	public String toString(){

@@ -25,6 +25,15 @@ import com.ec.node.Node;
  */
 public class OrNode extends TwoChildNode{
 	
+	public OrNode(){
+		children = new Vector<Node>(2);
+	}
+	
+	public OrNode(Node node){
+		this.parent = node;
+		children = new Vector<Node>(2);
+	}
+	
 	public OrNode(Node leftChild, Node rightChild){
 		children = new Vector<Node>(2);
 		children.add(0, leftChild);

@@ -25,6 +25,15 @@ import com.ec.node.Node;
  */
 public class AndNode extends TwoChildNode {
 	
+	public AndNode(){
+		children = new Vector<Node>(2);
+	}
+	
+	public AndNode(Node node){
+		this.parent = node;
+		children = new Vector<Node>(2);
+	}
+	
 	public AndNode(Node leftChild, Node rightChild) {
 		children = new Vector<Node>(2);
 		children.add(0, leftChild);

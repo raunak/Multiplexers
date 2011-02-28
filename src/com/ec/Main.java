@@ -24,7 +24,7 @@ import com.ec.Evolution.EvolutionType;
 public class Main {
 	
 	public static void main(String args[]){
-		Evolution evolution = new Evolution(EvolutionType.MUX6, 50000, 6);
+		Evolution evolution = new Evolution(EvolutionType.MUX6, 300);
 		evolution.evolve();
 	}
 }

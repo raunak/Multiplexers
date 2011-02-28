@@ -23,6 +23,10 @@ import java.util.Vector;
  */
 public abstract class Node {
 	
+	public Node parent;
+	
+	public boolean isRoot;
+	
 	/** Children of a Node */
 	public Vector<Node> children;
 	
@@ -41,5 +45,21 @@ public abstract class Node {
 	/** returns children for a node */
 	public Vector<Node> getChildren() {
 		return children;
+	}
+	
+	public boolean isRoot(){
+		return isRoot;
+	}
+	
+	public void setIsRoot(boolean isRoot){
+		this.isRoot = isRoot;
+	}
+	
+	public Node getParent(){
+		return parent;
+	}
+	
+	public void setParent(Node node){
+		this.parent = node;
 	}
 }

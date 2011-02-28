@@ -36,7 +36,7 @@ public class Evolution {
 	private int populationSize = 300;
 	
 	/** Default tree depth. */
-	private int maxDepth = 6;
+	private final int maxDepth = 6;
 	
 	/** Type is Mux6 if set to 0; else Mux11. */
 	private int evolutionType;
@@ -71,18 +71,6 @@ public class Evolution {
 		this.evolutionType = type;
 		this.populationSize = populationSize;
 		this.population = new Individual[populationSize];
-	}
-	
-	public Evolution(int type, int populationSize, int treeDepth){
-		this.evolutionType = type;
-		this.populationSize = populationSize;
-		this.population = new Individual[populationSize];
-		if (treeDepth > 3){
-			this.maxDepth = treeDepth;
-		} else {
-			System.err.println("Tree depth lower than '4' is not permitted");
-			System.exit(1);
-		}
 	}
 	
 	public void evolve(){
@@ -158,7 +146,7 @@ public class Evolution {
 	}
 	
 	private void generateMux6Population(){
-		int tDepth1 = maxDepth--;
+		int tDepth1 = maxDepth - 1;
 		int tDepth2 = maxDepth - 2;
 		
 		try{ //for performance; otherwise needs checks.
@@ -179,7 +167,7 @@ public class Evolution {
 	}
 	
 	private void generateMux11Population(){
-		int tDepth1 = maxDepth--;
+		int tDepth1 = maxDepth - 1;
 		int tDepth2 = maxDepth - 2;
 		
 		try{ //for performance; otherwise needs checks.
@@ -213,36 +201,41 @@ public class Evolution {
 		}
 	}
 	
-	//TODO: Clean up!
-	private Node mutateMux6(Node node){
-		Vector<Node> enumeration = node.enumerate();
-		if(enumeration == null){
-			return mux6.growTree(maxDepth);
-		} else{
-			int randomPoint = random.nextInt(enumeration.size());
-			Node parentNode = enumeration.get(randomPoint);
-			
-			int depth1 = maxDepth - (node.getDepth() - parentNode.getDepth());
-		
-//			System.out.println("Node Depth: " + node.getDepth() + " random node depth: " + parentNode.getDepth() + " D: " + depth1);
-			
-			int depth = random.nextInt(depth1+1);
-			
-			int childCountForParent = parentNode.getChildren().size();
-			
-			if(childCountForParent == 1){
-				parentNode.children.set(0, mux6.growTree(depth));
-			} else if (childCountForParent == 2){
-				parentNode.children.set(0, mux6.growTree(depth));
-				parentNode.children.set(1, mux6.growTree(depth));
-			} else if (childCountForParent == 3){
-				parentNode.children.set(0, mux6.growTree(depth));
-				parentNode.children.set(1, mux6.growTree(depth));
-				parentNode.children.set(2, mux6.growTree(depth));
-			}
-
-			return node;
+	private int getGrowSpace(Node node){
+		Node raunak = node;
+		int count = 0;
+		while(!raunak.isRoot){
+			count++;
+			raunak = raunak.getParent();
 		}
+		return this.maxDepth - count;
+	}
+	
+	
+	private Node mutateMux6(Node root){
+		Vector<Node> enumeration = root.enumerate();
+		
+		if(enumeration ==  null){
+			return mux6.growTree(maxDepth);
+		} else {
+			Node nodeToMutate = enumeration.get(random.nextInt(enumeration.size()));
+			
+			int noOfChildrenMutateNode = nodeToMutate.getChildren().size();
+			int depth = random.nextInt(getGrowSpace(nodeToMutate));
+			
+			if(noOfChildrenMutateNode == 1){
+				nodeToMutate.children.set(0, mux6.growTree(depth));
+			} else if (noOfChildrenMutateNode == 2){
+				nodeToMutate.children.set(0, mux6.growTree(depth));
+				nodeToMutate.children.set(1, mux6.growTree(depth));
+			} else if (noOfChildrenMutateNode == 3){
+				nodeToMutate.children.set(0, mux6.growTree(depth));
+				nodeToMutate.children.set(1, mux6.growTree(depth));
+				nodeToMutate.children.set(2, mux6.growTree(depth));
+			}
+			
+		}
+		return root;
 	}
 
 	//TODO: Implement this NEEDS A RETURN

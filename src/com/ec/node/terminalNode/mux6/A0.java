@@ -17,14 +17,21 @@
 package com.ec.node.terminalNode.mux6;
 
 import com.ec.node.Mux6Node;
+import com.ec.node.Node;
 
 /**
  * @version 1.0 
  */
 public class A0 extends Mux6Node{
-	
+
 	/** Bit mask for <code>A0</code> terminal node. */
 	public static final byte mask = 5;
+	
+	public A0(){}
+	
+	public A0(Node node){
+		this.parent = node;
+	}
 	
 	@Override
 	public boolean eval(int input) {

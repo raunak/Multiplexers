@@ -17,6 +17,7 @@
 package com.ec.node.terminalNode.mux6;
 
 import com.ec.node.Mux6Node;
+import com.ec.node.Node;
 
 /**
  * @version 1.0
@@ -25,6 +26,12 @@ public class D1 extends Mux6Node{
 
 	public static final byte mask = 2;
 	
+	public D1(){}
+	
+	public D1(Node node){
+		this.parent = node;
+	}
+
 	@Override
 	public boolean eval(int input) {
 		return ((input & D1.mask) != 0); 

@@ -32,7 +32,7 @@ public abstract class Generator{
 	/** A static instance of <code>Random</code>*/
 	protected static Random random = new Random();
 	
-	public abstract Node getRandomTerminal();
+	public abstract Node getRandomTerminal(Node root);
 	public abstract Node fullTree(int depth);
 	public abstract Node growTree(int depth);
 	public abstract Individual fitness(Node node);
