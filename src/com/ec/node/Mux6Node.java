@@ -33,7 +33,7 @@ public abstract class Mux6Node extends Node{
 
 	@Override
 	public Vector<Node> enumerate() {
-		return null;
+		return new Vector<Node>(0);
 	}
 
 	@Override
