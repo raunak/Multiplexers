@@ -27,8 +27,6 @@ public class A0 extends Mux6Node{
 	/** Bit mask for <code>A0</code> terminal node. */
 	public static final byte mask = 5;
 	
-	public A0(){}
-	
 	public A0(Node node){
 		this.parent = node;
 	}

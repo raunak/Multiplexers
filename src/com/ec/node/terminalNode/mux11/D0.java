@@ -17,6 +17,7 @@
 package com.ec.node.terminalNode.mux11;
 
 import com.ec.node.Mux11Node;
+import com.ec.node.Node;
 
 /**
  * @version 1.0
@@ -26,6 +27,10 @@ public class D0 extends Mux11Node{
 	/** Bit mask for <code>D0</code> terminal node. */
 	public static final byte mask = 7;
 
+	public D0(Node node){
+		this.parent = node;
+	}
+	
 	@Override
 	public boolean eval(int input) {
 		return ((input & D0.mask) != 0); 
