@@ -14,10 +14,13 @@
  * limitations under the License.
  * 
  */
-package src.com.ec.node.functionNode;
+package com.ec.node.functionNode;
 
-import src.com.ec.Evolution;
-import src.com.ec.node.Node;
+import java.util.Vector;
+
+import com.ec.Evolution;
+import com.ec.node.Node;
+
 
 /**
  * @version 1.0
@@ -61,11 +64,6 @@ public abstract class TwoChildNode extends FunctionNode {
 				subtreeDepth);
 		v.addAll(renum);
 		return v;
-	}
-
-	@Override
-	public boolean eval(int input) {
-		return getLeftChild().eval(input) && getRightChild().eval(input);
 	}
 
 	@Override
