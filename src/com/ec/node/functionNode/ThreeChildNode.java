@@ -18,6 +18,7 @@ package com.ec.node.functionNode;
 
 import java.util.Vector;
 
+import com.ec.Evolution;
 import com.ec.node.Node;
 
 /**
@@ -41,30 +42,49 @@ public abstract class ThreeChildNode extends FunctionNode {
 	public Vector<Node> enumerate() {
 		Vector<Node> v = new Vector<Node>();
 		v.add(this);
-		
+
 		Vector<Node> lenum = this.getLeftChild().enumerate();
-		if (null != lenum){
+		if (null != lenum) {
 			v.addAll(lenum);
 		}
-			
+
 		Vector<Node> menum = this.getMiddleChild().enumerate();
-		if (null != menum){
+		if (null != menum) {
 			v.addAll(menum);
 		}
-			
+
 		Vector<Node> renum = this.getRightChild().enumerate();
-		if (null != renum){
+		if (null != renum) {
 			v.addAll(renum);
 		}
-		
+
+		return v;
+	}
+
+	@Override
+	public Vector<Node> enumBounded(int remainingDepth, int subtreeDepth) {
+		Vector<Node> v = new Vector<Node>();
+		int mydepth = this.getDepth();
+		int leftSpace = Evolution.maxDepth - this.getLevel();
+		if ((mydepth <= remainingDepth) && (leftSpace >= subtreeDepth)) {
+			v.add(this);
+		}
+		Vector<Node> lenum = this.getLeftChild().enumBounded(remainingDepth,
+				subtreeDepth);
+		v.addAll(lenum);
+		Vector<Node> menum = this.getMiddleChild().enumBounded(remainingDepth,
+				subtreeDepth);
+		v.addAll(menum);
+		Vector<Node> renum = this.getRightChild().enumBounded(remainingDepth,
+				subtreeDepth);
+		v.addAll(renum);
 		return v;
 	}
 
 	@Override
 	public int getDepth() {
-		return Math
-				.max(getLeftChild().getDepth(), Math.max(getMiddleChild()
-						.getDepth(), getRightChild().getDepth())) + 1;
+		return Math.max(getLeftChild().getDepth(), Math.max(getMiddleChild()
+				.getDepth(), getRightChild().getDepth())) + 1;
 	}
 
 	public Node getLeftChild() {

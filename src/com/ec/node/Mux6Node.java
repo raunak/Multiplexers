@@ -37,6 +37,11 @@ public abstract class Mux6Node extends Node{
 	}
 
 	@Override
+	public Vector<Node> enumBounded(int remainingLevels, int incomingDepth) {
+		return new Vector<Node>(0);
+	}
+
+	@Override
 	public int getDepth() {
 		return 0;
 	}
