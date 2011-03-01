@@ -126,6 +126,7 @@ public class Mux6Generator extends Generator {
 		case 3:
 			return new IfNode();
 		case 4: 
+			// TODO: move out terminals to a separate method to balance probabilities
 			return new A0(null);
 		case 5:
 			return new A1(null);
@@ -174,7 +175,7 @@ public class Mux6Generator extends Generator {
 		}
 	}
 	
-	private Node recGrowTree(Node root, int depth){
+	public Node recGrowTree(Node root, int depth){
 		if (depth > 0) {
 			switch (random.nextInt(4)) {
 			case 0:
