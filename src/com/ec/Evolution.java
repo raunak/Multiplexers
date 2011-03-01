@@ -54,7 +54,7 @@ public class Evolution {
 	private Individual individual;
 	
 	/** Holds x number of individuals, where x refers to the population size.*/
-	private Individual[] population;
+	public Individual[] population;
 	
 	/** <code>Mux6Generator</code> object */
 	private Mux6Generator mux6;
@@ -96,9 +96,10 @@ public class Evolution {
 				
 				//Perform selection
 				selectedIndividuals = selection();
+				Node[] crossovered = probCrossover(selectedIndividuals[0].getNode(), selectedIndividuals[1].getNode());
 				
-				newPopulation[i] = mux6.fitness(mutate(selectedIndividuals[0].getNode()));
-				newPopulation[i+1] = mux6.fitness(mutate(selectedIndividuals[0].getNode()));
+				newPopulation[i] = mux6.fitness(mutate(crossovered[0]));
+				newPopulation[i+1] = mux6.fitness(mutate(crossovered[1]));
 			}
 			
 			population = newPopulation;
@@ -122,9 +123,10 @@ public class Evolution {
 				
 				//Perform selection
 				selectedIndividuals = selection();
+				Node[] crossovered = probCrossover(selectedIndividuals[0].getNode(), selectedIndividuals[1].getNode());
 				
-				newPopulation[i] = mux11.fitness(mutate(selectedIndividuals[0].getNode()));
-				newPopulation[i+1] = mux11.fitness(mutate(selectedIndividuals[0].getNode()));
+				newPopulation[i] = mux11.fitness(mutate(crossovered[0]));
+				newPopulation[i+1] = mux11.fitness(mutate(crossovered[0]));
 			}
 			
 			population = newPopulation;
@@ -135,7 +137,7 @@ public class Evolution {
 		}
 	}
 	
-	private void generatePopulation(){
+	public void generatePopulation(){
 		if(evolutionType == EvolutionType.MUX6){
 			mux6 = new Mux6Generator();
 			generateMux6Population();
@@ -187,16 +189,29 @@ public class Evolution {
 		} catch (IndexOutOfBoundsException iob){}
 	}
 	
-	//TODO: Implement this
-	// change to private?
-	public Node[] crossover(Node father, Node mother) {
+	private Node[] probCrossover(Node father, Node mother){
+		Node[] children = {father, mother};
+		
+		if(cxProb < random.nextDouble()){
+			children = crossover(father, mother);
+		} 
+		return children;
+	}
+	
+	
+	private Node[] crossover(Node father, Node mother) {
 		
 		int fd = father.getDepth();
 		int md = mother.getDepth();
-		System.out.println("fd: " + fd);
-		System.out.println("md: " + md);
+//		System.out.println("fd: " + fd);
+//		System.out.println("md: " + md);
 		if ( (fd != 0) &&  (md != 0) ) {
-			System.out.println("Both positive");
+			if( father.getDepth() > mother.getDepth()) {
+				Node tmp = father;
+				father = mother;
+				mother = tmp;
+			}
+//			System.out.println("Both positive");
 			Vector<Node> fenum = father.enumerate();
 
 			int randomPoint = random.nextInt(fenum.size());
@@ -204,22 +219,30 @@ public class Evolution {
 			int p1depth = p1.getDepth();
 			int depthLeft = maxDepth - p1.getLevel();
 			Vector<Node> menum = mother.enumBounded(depthLeft, p1depth);
-
+			if (menum.size() == 0) {
+				System.out.println("f: " + father);
+				System.out.println("m: " + mother);
+				System.out.println("fd: " + fd);
+				System.out.println("md: " + md);
+				System.out.println("p1: " + p1);
+				System.out.println("menum size: " + menum.size());
+				System.out.println("menum: " + menum);
+			}
 			randomPoint = random.nextInt(menum.size());
 			Node p2 = menum.get(randomPoint);
 			int c1 = random.nextInt(p1.children.size());
 			int c2 = random.nextInt(p2.children.size());
 			Node swapFromF = p1.children.get(c1);
 			Node swapFromM = p2.children.get(c2);
-			System.out.println("Swap from father: " + swapFromF);
-			System.out.println("Swap from mother: " + swapFromM);
+//			System.out.println("Swap from father: " + swapFromF);
+//			System.out.println("Swap from mother: " + swapFromM);
 			p1.children.set(c1, swapFromM);
 			p2.children.set(c2, swapFromF);
 			Node[] n = { father, mother };
 			return n;
 		} else {
 			if (father.getDepth() == 0 && mother.getDepth() != 0) {
-				System.out.println("Father's depth is 0");
+//				System.out.println("Father's depth is 0");
 				Vector<Node> menum = mother.enumerate();
 				int randomPoint = random.nextInt(menum.size());
 				Node p2 = menum.get(randomPoint);
@@ -227,12 +250,12 @@ public class Evolution {
 				int c2 = random.nextInt(p2.children.size());
 				Node p1 = p2.children.get(c2);
 				p2.children.set(c2, father);
-				System.out.println("Swap from father: " + father);
-				System.out.println("Swap from mother: " + p1);
+//				System.out.println("Swap from father: " + father);
+//				System.out.println("Swap from mother: " + p1);
 
 				Node[] n = { p1, mother };
 				return n;
-			} else {
+			} else if (father.getDepth() == 0 && mother.getDepth() != 0) {
 				System.out.println("Mother's depth is 0");
 				Vector<Node> fenum = father.enumerate();
 
@@ -242,51 +265,59 @@ public class Evolution {
 				int c1 = random.nextInt(p1.children.size());
 				Node p2 = p1.children.get(c1);
 				p1.children.set(c1, mother);
-				System.out.println("Swap from father: " + p2);
-				System.out.println("Swap from mother: " + mother);
+//				System.out.println("Swap from father: " + p2);
+//				System.out.println("Swap from mother: " + mother);
 				Node[] n = { p2, father };
+				return n;
+			} else {
+				Node[] n = { mother, father };
 				return n;
 			}
 		}
 	}
 	
-	private Node mutate(Node node){
+	public Node mutate(Node node){
 		if(evolutionType == EvolutionType.MUX6){
-			return mutateMux6(node);
+			return probMutate6(node);
+		} else if (evolutionType == EvolutionType.MUX11){
+			return probMutate11(node);
 		} else {
+			return node;
+		}
+	}
+	
+	private Node probMutate6(Node node){
+		if(mtProb < random.nextDouble()){
+			return mutateMux6(node);
+		} else return node;
+	}
+	
+	private Node probMutate11(Node node){
+		if(mtProb < random.nextDouble()){
 			return mutateMux11(node);
-		}
+		} else return node;
 	}
-	
-	private int getGrowSpace(Node node){
-		int count = 0;
-		while((node = node.getParent()) != null){
-			count++;
-		}
-		return this.maxDepth - count;
-	}
-	
 	
 	private Node mutateMux6(Node root){
 		Vector<Node> enumeration = root.enumerate();
 		
-		if(enumeration ==  null){
+		if(enumeration.isEmpty()){
 			return mux6.growTree(maxDepth);
 		} else {
 			Node nodeToMutate = enumeration.get(random.nextInt(enumeration.size()));
 			
 			int noOfChildrenMutateNode = nodeToMutate.getChildren().size();
-			int depth = random.nextInt(getGrowSpace(nodeToMutate));
+			int depth = random.nextInt(maxDepth - nodeToMutate.getLevel());
 			
 			if(noOfChildrenMutateNode == 1){
-				nodeToMutate.children.set(0, mux6.growTree(depth));
+				nodeToMutate.children.set(0, mux6.recGrowTree(nodeToMutate, depth));
 			} else if (noOfChildrenMutateNode == 2){
-				nodeToMutate.children.set(0, mux6.growTree(depth));
-				nodeToMutate.children.set(1, mux6.growTree(depth));
+				nodeToMutate.children.set(0, mux6.recGrowTree(nodeToMutate, depth));
+				nodeToMutate.children.set(1, mux6.recGrowTree(nodeToMutate, depth));
 			} else if (noOfChildrenMutateNode == 3){
-				nodeToMutate.children.set(0, mux6.growTree(depth));
-				nodeToMutate.children.set(1, mux6.growTree(depth));
-				nodeToMutate.children.set(2, mux6.growTree(depth));
+				nodeToMutate.children.set(0, mux6.recGrowTree(nodeToMutate, depth));
+				nodeToMutate.children.set(1, mux6.recGrowTree(nodeToMutate, depth));
+				nodeToMutate.children.set(2, mux6.recGrowTree(nodeToMutate, depth));
 			}
 			
 		}
