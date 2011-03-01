@@ -35,6 +35,11 @@ public abstract class Mux11Node extends Node{
 	public Vector<Node> enumerate() {
 		return null;
 	}
+	
+	@Override
+	public Vector<Node> enumBounded(int remainingLevels, int incomingDepth) {
+		return new Vector<Node>(0);
+	}
 
 	@Override
 	public int getDepth() {

@@ -32,6 +32,11 @@ public abstract class Node {
 	/** returns max depth of Node */
 	public abstract int getDepth();
 	
+	public int getLevel() {
+		if (parent == null ) return 0;
+		else return parent.getLevel() +1;
+	}
+	
 	/** returns the number of nodes */
 	public abstract int countNodes();
 	
@@ -40,6 +45,8 @@ public abstract class Node {
 	
 	/** returns an vector will all the child nodes*/
 	public abstract Vector<Node> enumerate();
+	
+	public abstract Vector<Node> enumBounded(int remainingDepth, int subtreeDepth);
 
 	/** returns children for a node */
 	public Vector<Node> getChildren() {

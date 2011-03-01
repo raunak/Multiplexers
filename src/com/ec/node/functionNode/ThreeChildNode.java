@@ -18,6 +18,7 @@ package com.ec.node.functionNode;
 
 import java.util.Vector;
 
+import com.ec.Evolution;
 import com.ec.node.Node;
 
 /**
@@ -56,7 +57,27 @@ public abstract class ThreeChildNode extends FunctionNode {
 		if (null != renum) {
 			v.addAll(renum);
 		}
+		
+		return v;
+	}
 
+	@Override
+	public Vector<Node> enumBounded(int remainingDepth, int subtreeDepth) {
+		Vector<Node> v = new Vector<Node>();
+		int mydepth = this.getDepth();
+		int leftSpace = Evolution.maxDepth - this.getLevel();
+		if ((mydepth <= remainingDepth) && (leftSpace >= subtreeDepth)) {
+			v.add(this);
+		}
+		Vector<Node> lenum = this.getLeftChild().enumBounded(remainingDepth,
+				subtreeDepth);
+		v.addAll(lenum);
+		Vector<Node> menum = this.getMiddleChild().enumBounded(remainingDepth,
+				subtreeDepth);
+		v.addAll(menum);
+		Vector<Node> renum = this.getRightChild().enumBounded(remainingDepth,
+				subtreeDepth);
+		v.addAll(renum);
 		return v;
 	}
 
