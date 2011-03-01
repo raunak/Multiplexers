@@ -39,6 +39,11 @@ public class AndNode extends TwoChildNode {
 		children.add(0, leftChild);
 		children.add(1, rightChild);
 	}
+	
+	@Override
+	public boolean eval(int input) {
+		return getLeftChild().eval(input) && getRightChild().eval(input);
+	}
 
 	@Override
 	public String toString() {

@@ -23,7 +23,6 @@ import com.ec.node.functionNode.IfNode;
 import com.ec.node.functionNode.NotNode;
 import com.ec.node.functionNode.OrNode;
 import com.ec.node.terminalNode.mux11.*;
-import com.ec.node.terminalNode.mux6.A0;
 
 /**
  * @version 1.0
@@ -33,98 +32,76 @@ public class Mux11Generator extends Generator {
 	private static final int resMask = 128;
 	private static final int addrShift = 8;
 
-	public Mux11Generator(){}
-	
-	public Mux11Generator(float probability){
-		Generator.growStopProbability = probability;
-	}
-	
+	public static final int RANDOMNODE = 15;
+	public static final int FUNCTIONALNODE = 4;
+	public static final int RANDOMTERMINAL = 12;
+
 	@Override
-	public Node getRandomTerminal() {
-		switch (random.nextInt(12)) {
+	public Node getRandomTerminal(Node root) {
+		switch (random.nextInt(Mux11Generator.RANDOMTERMINAL)) {
 		case 0:
-			return new A0();
+			return new A0(root);
 		case 1:
-			return new A1();
+			return new A1(root);
 		case 3:
-			return new A2();
+			return new A2(root);
 		case 4:
-			return new D0();
-		case 5: 
-			return new D1();
+			return new D0(root);
+		case 5:
+			return new D1(root);
 		case 6:
-			return new D2();
+			return new D2(root);
 		case 7:
-			return new D3();
+			return new D3(root);
 		case 8:
-			return new D4();
+			return new D4(root);
 		case 9:
-			return new D5();
+			return new D5(root);
 		case 10:
-			return new D6();
+			return new D6(root);
 		case 11:
-			return new D7();
-		default: //Should never happen
-			return new A0();
+			return new D7(root);
+		default: // Should never happen
+			System.out.println("HIT BOGUS!!");
+			return null;
 		}
 	}
 
-	@Override
-	public Node fullTree(int depth) {
-		if (depth > 0) {
-			switch (random.nextInt(4)) {
-			case 0:
-				return new NotNode(fullTree(depth - 1));
-			case 1:
-				return new OrNode(fullTree(depth - 1), fullTree(depth - 1));
-			case 2:
-				return new AndNode(fullTree(depth - 1), fullTree(depth - 1));
-			case 3:
-				return new IfNode(fullTree(depth - 1), fullTree(depth - 1),
-						fullTree(depth - 1));
-			default: // This should NEVER happen!!
-				return new A0();
-			}
-		} 
-		else {
-			return getRandomTerminal();
-		}
-	}
-
-	@Override
-	public Node growTree(int depth) {
-		if (depth > 0) {
-			switch (random.nextInt(4)) {
-			case 0:
-				if (Generator.growStopProbability < random.nextDouble()){
-					return new NotNode(growTree(depth - 1));
-				} else {
-					return getRandomTerminal();
-				}
-			case 1:
-				if (Generator.growStopProbability < random.nextDouble()){
-					return new OrNode(growTree(depth - 1), growTree(depth - 1));
-				} else {
-					return getRandomTerminal();
-				}
-			case 2:
-				if (Generator.growStopProbability < random.nextDouble()){
-					return new AndNode(growTree(depth - 1), growTree(depth - 1));
-				} else {
-					return getRandomTerminal();
-				}
-			case 3:
-				if (Generator.growStopProbability < random.nextDouble()){
-					return new IfNode(growTree(depth - 1), growTree(depth - 1), growTree(depth - 1));
-				} else {
-					return getRandomTerminal();
-				}
-			default: // This should NEVER happen!!
-				return new A0();
-			}
-		} 
-		else {
-			return getRandomTerminal();
+	private Node generateRoot(int range) {
+		switch (random.nextInt(range)) {
+		case 0:
+			return new NotNode();
+		case 1:
+			return new OrNode();
+		case 2:
+			return new AndNode();
+		case 3:
+			return new IfNode();
+		case 4:
+			return new A0(null);
+		case 5:
+			return new A1(null);
+		case 6:
+			return new A2(null);
+		case 7:
+			return new D0(null);
+		case 8:
+			return new D1(null);
+		case 9:
+			return new D2(null);
+		case 10:
+			return new D3(null);
+		case 11:
+			return new D4(null);
+		case 12:
+			return new D5(null);
+		case 13:
+			return new D6(null);
+		case 14:
+			return new D7(null);
+		default: // This should NEVER happen!!
+			System.out.println("HIT BOGUS!!");
+			return null;
 		}
 	}
 
@@ -132,29 +109,150 @@ public class Mux11Generator extends Generator {
 	public Individual fitness(Node node) {
 		int count = 0;
 		boolean[] actualAnswer = getTrueResult();
-		
-		for(int i = 0; i < actualAnswer.length; i++){
-			if(actualAnswer[i] == node.eval(i)){
+
+		for (int i = 0; i < actualAnswer.length; i++) {
+			if (actualAnswer[i] == node.eval(i)) {
 				count++;
 			}
 		}
-		return new Individual(node, count/2048f);
+		return new Individual(node, count / 2048f);
 	}
 
-	private boolean[] getTrueResult(){
+	private boolean[] getTrueResult() {
 		boolean[] arr = new boolean[2048];
-		for(int i = 0; i < 2048; i ++){
+		for (int i = 0; i < 2048; i++) {
 			arr[i] = computeResult(i);
 		}
 		return arr;
 	}
 
-	private boolean computeResult(int input){
+	private boolean computeResult(int input) {
 		int addr = input >> addrShift;
 		int invaddr = 7 - addr;
 		int resmask = resMask >> addr;
 		int val = input & resmask;
 		int res = val >> invaddr;
 		return res != 0;
+	}
+
+	@Override
+	public Node fullTree(int depth) {
+		Node root = generateRoot(Mux11Generator.FUNCTIONALNODE);
+		System.out.println(root.toString());
+
+		int rootCapacity = root.getChildren().capacity();
+		if (rootCapacity == 1) {
+			root.children.add(0, fillTree(root, depth - 1));
+		} else if (rootCapacity == 2) {
+			root.children.add(0, fillTree(root, depth - 1));
+			root.children.add(1, fillTree(root, depth - 1));
+		} else if (rootCapacity == 3) {
+			root.children.add(0, fillTree(root, depth - 1));
+			root.children.add(1, fillTree(root, depth - 1));
+			root.children.add(2, fillTree(root, depth - 1));
+		}
+		return root;
+	}
+
+	private Node fillTree(Node root, int depth) {
+		if (depth > 0) {
+			switch (random.nextInt(Mux11Generator.FUNCTIONALNODE)) {
+			case 0:
+				NotNode node = new NotNode(root);
+				node.children.add(fillTree(node, depth - 1));
+				return node;
+			case 1:
+				OrNode orNode = new OrNode(root);
+				orNode.children.add(0, fillTree(orNode, depth - 1));
+				orNode.children.add(1, fillTree(orNode, depth - 1));
+				return orNode;
+			case 2:
+				AndNode andNode = new AndNode(root);
+				andNode.children.add(0, fillTree(andNode, depth - 1));
+				andNode.children.add(1, fillTree(andNode, depth - 1));
+				return andNode;
+			case 3:
+				IfNode ifNode = new IfNode(root);
+				ifNode.children.add(0, fillTree(ifNode, depth - 1));
+				ifNode.children.add(1, fillTree(ifNode, depth - 1));
+				ifNode.children.add(2, fillTree(ifNode, depth - 1));
+				return ifNode;
+			default: // This should NEVER happen!!
+				return null;
+			}
+		} else {
+			return getRandomTerminal(root);
+		}
+	}
+
+	@Override
+	public Node growTree(int depth) {
+		Node root = generateRoot(Mux11Generator.RANDOMNODE);
+
+		if (root.getChildren() == null) {
+			return root;
+
+		} else {
+
+			int childSize = root.getChildren().capacity();
+			if (childSize == 1) {
+				root.children.add(0, recGrowTree(root, depth - 1));
+			} else if (childSize == 2) {
+				root.children.add(0, recGrowTree(root, depth - 1));
+				root.children.add(1, recGrowTree(root, depth - 1));
+			} else if (childSize == 3) {
+				root.children.add(0, recGrowTree(root, depth - 1));
+				root.children.add(1, recGrowTree(root, depth - 1));
+				root.children.add(2, recGrowTree(root, depth - 1));
+			}
+			return root;
+		}
+	}
+
+	private Node recGrowTree(Node root, int depth) {
+		if (depth > 0) {
+			switch (random.nextInt(4)) {
+			case 0:
+				if (Generator.growStopProbability < random.nextDouble()) {
+					NotNode node = new NotNode(root);
+					node.children.add(recGrowTree(node, depth - 1));
+					return node;
+				} else {
+					return getRandomTerminal(root);
+				}
+			case 1:
+				if (Generator.growStopProbability < random.nextDouble()) {
+					OrNode orNode = new OrNode(root);
+					orNode.children.add(0, recGrowTree(orNode, depth - 1));
+					orNode.children.add(1, recGrowTree(orNode, depth - 1));
+					return orNode;
+				} else {
+					return getRandomTerminal(root);
+				}
+			case 2:
+				if (Generator.growStopProbability < random.nextDouble()) {
+					AndNode andNode = new AndNode(root);
+					andNode.children.add(0, recGrowTree(andNode, depth - 1));
+					andNode.children.add(1, recGrowTree(andNode, depth - 1));
+					return andNode;
+				} else {
+					return getRandomTerminal(root);
+				}
+			case 3:
+				if (Generator.growStopProbability < random.nextDouble()) {
+					IfNode ifNode = new IfNode(root);
+					ifNode.children.add(0, recGrowTree(ifNode, depth - 1));
+					ifNode.children.add(1, recGrowTree(ifNode, depth - 1));
+					ifNode.children.add(2, recGrowTree(ifNode, depth - 1));
+					return ifNode;
+				} else {
+					return getRandomTerminal(root);
+				}
+			default: // This should NEVER happen!!
+				return null;
+			}
+		} else {
+			return getRandomTerminal(root);
+		}
 	}
 }

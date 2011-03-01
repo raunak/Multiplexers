@@ -34,6 +34,10 @@ public class NotNode extends OneChildNode{
 		children = new Vector<Node>(1);
 	}
 	
+	@Override
+	public boolean eval(int input) {
+		return !getChild().eval(input);
+	}
 	
 	@Override
 	public String toString(){

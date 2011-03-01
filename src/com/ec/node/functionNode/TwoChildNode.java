@@ -49,11 +49,6 @@ public abstract class TwoChildNode extends FunctionNode {
 	}
 
 	@Override
-	public boolean eval(int input) {
-		return getLeftChild().eval(input) && getRightChild().eval(input);
-	}
-
-	@Override
 	public int getDepth() {
 		return Math.max(getLeftChild().getDepth(), getRightChild().getDepth()) + 1;
 	}

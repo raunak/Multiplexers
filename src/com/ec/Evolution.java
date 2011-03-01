@@ -202,11 +202,9 @@ public class Evolution {
 	}
 	
 	private int getGrowSpace(Node node){
-		Node raunak = node;
 		int count = 0;
-		while(!raunak.isRoot){
+		while((node = node.getParent()) != null){
 			count++;
-			raunak = raunak.getParent();
 		}
 		return this.maxDepth - count;
 	}

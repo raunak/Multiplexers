@@ -33,15 +33,12 @@ import com.ec.node.terminalNode.mux6.D3;
  * @version 1.0
  */
 public class Mux6Generator extends Generator {
-	
-	private static final int resMask6 = 8;
+	private static final int resMask = 8;
 	private static final int addrShift = 4;
 	
-	public Mux6Generator(){}
+	public static final int RANDOMNODE = 10;
+	public static final int FUNCTIONALNODE = 4;
 	
-	public Mux6Generator(float probability) {
-		Generator.growStopProbability = probability;
-	}
 	
 	@Override
 	public Node getRandomTerminal(Node root) {
@@ -62,24 +59,64 @@ public class Mux6Generator extends Generator {
 			return null;
 		}
 	}
+
+	@Override
+	public Node fullTree(int depth){
+		Node root = generateRoot(Mux6Generator.FUNCTIONALNODE);
 		
-	private Node generateRoot(){
-		switch (random.nextInt(4)) {
-		case 0:
-			return new NotNode();
-		case 1:
-			return new OrNode();
-		case 2:
-			return new AndNode();
-		case 3:
-			return new IfNode();
-		default: // This should NEVER happen!!
-			return null;
+		int rootCapacity = root.getChildren().capacity();
+		if(rootCapacity == 1){
+			root.children.add(0, fillTree(root, depth - 1));
+		} else if (rootCapacity == 2){
+			root.children.add(0, fillTree(root, depth - 1));
+			root.children.add(1, fillTree(root, depth - 1));
+		} else if (rootCapacity == 3){
+			root.children.add(0, fillTree(root, depth - 1));
+			root.children.add(1, fillTree(root, depth - 1));
+			root.children.add(2, fillTree(root, depth - 1));
 		}
+		return root;
 	}
 	
-	private Node generateGrowRoot(){
-		switch (random.nextInt(10)) {
+	@Override 
+	public Node growTree(int depth){
+		Node root = generateRoot(Mux6Generator.RANDOMNODE);
+		
+		if (root.getChildren() == null){
+			return root;
+			
+		} else {
+			
+			int childSize = root.getChildren().capacity();
+			if(childSize == 1){
+				root.children.add(0, recGrowTree(root, depth - 1));
+			} else if (childSize == 2){
+				root.children.add(0, recGrowTree(root, depth - 1));
+				root.children.add(1, recGrowTree(root, depth - 1));
+			} else if (childSize == 3){
+				root.children.add(0, recGrowTree(root, depth - 1));
+				root.children.add(1, recGrowTree(root, depth - 1));
+				root.children.add(2, recGrowTree(root, depth - 1));
+			}
+			return root;
+		}
+	}
+
+	@Override
+	public Individual fitness(Node node) {
+		int count = 0;
+		boolean[] actualAnswer = getTrueResult();
+		
+		for(int i = 0; i < actualAnswer.length; i++){
+			if(actualAnswer[i] == node.eval(i)){
+				count++;
+			}
+		}
+		return new Individual(node, count/64f);
+	}
+
+	private Node generateRoot(int range){
+		switch (random.nextInt(range)) {
 		case 0:
 			return new NotNode();
 		case 1:
@@ -89,46 +126,25 @@ public class Mux6Generator extends Generator {
 		case 3:
 			return new IfNode();
 		case 4: 
-			return new A0();
+			return new A0(null);
 		case 5:
-			return new A1();
+			return new A1(null);
 		case 6: 
-			return new D0();
+			return new D0(null);
 		case 7: 
-			return new D1();
+			return new D1(null);
 		case 8:
-			return new D2();
+			return new D2(null);
 		case 9:
-			return new D3();
+			return new D3(null);
 		default: // This should NEVER happen!!
 			return null;
 		}
 	}
-	
-	@Override
-	public Node fullTree(int depth){
-		Node root = generateRoot();
-		root.setIsRoot(true);
-		
-		int childSize = root.getChildren().capacity();
-		
-		if(childSize == 1){
-			root.children.add(0, fillTree(root, depth - 1));
-		} else if (childSize == 2){
-			root.children.add(0, fillTree(root, depth - 1));
-			root.children.add(1, fillTree(root, depth - 1));
-		} else if (childSize == 3){
-			root.children.add(0, fillTree(root, depth - 1));
-			root.children.add(1, fillTree(root, depth - 1));
-			root.children.add(2, fillTree(root, depth - 1));
-		}
-		return root;
-	}
-	
-	
-	public Node fillTree(Node root, int depth) {
+
+	private Node fillTree(Node root, int depth) {
 		if (depth > 0) {
-			switch (random.nextInt(4)) {
+			switch (random.nextInt(Mux6Generator.FUNCTIONALNODE)) {
 			case 0:
 				NotNode node = new NotNode(root);
 				node.children.add(fillTree(node, depth - 1));
@@ -158,37 +174,13 @@ public class Mux6Generator extends Generator {
 		}
 	}
 	
-	@Override 
-	public Node growTree(int depth){
-		Node root = generateGrowRoot();
-		if (root.getChildren() == null){
-			return root;
-		} else {
-			root.setIsRoot(true);
-			
-			int childSize = root.getChildren().capacity();
-			
-			if(childSize == 1){
-				root.children.add(0, growTree2(root, depth - 1));
-			} else if (childSize == 2){
-				root.children.add(0, growTree2(root, depth - 1));
-				root.children.add(1, growTree2(root, depth - 1));
-			} else if (childSize == 3){
-				root.children.add(0, growTree2(root, depth - 1));
-				root.children.add(1, growTree2(root, depth - 1));
-				root.children.add(2, growTree2(root, depth - 1));
-			}
-			return root;
-		}
-	}
-	
-	private Node growTree2(Node root, int depth){
+	private Node recGrowTree(Node root, int depth){
 		if (depth > 0) {
 			switch (random.nextInt(4)) {
 			case 0:
 				if (Generator.growStopProbability < random.nextDouble()){
 					NotNode node = new NotNode(root);
-					node.children.add(growTree2(node, depth - 1));
+					node.children.add(recGrowTree(node, depth - 1));
 					return node;
 				} else {
 					return getRandomTerminal(root);
@@ -196,8 +188,8 @@ public class Mux6Generator extends Generator {
 			case 1:
 				if (Generator.growStopProbability < random.nextDouble()){
 					OrNode orNode = new OrNode(root);
-					orNode.children.add(0, growTree2(orNode, depth - 1));
-					orNode.children.add(1, growTree2(orNode, depth - 1));
+					orNode.children.add(0, recGrowTree(orNode, depth - 1));
+					orNode.children.add(1, recGrowTree(orNode, depth - 1));
 					return orNode;
 				} else {
 					return getRandomTerminal(root);
@@ -205,8 +197,8 @@ public class Mux6Generator extends Generator {
 			case 2:
 				if (Generator.growStopProbability < random.nextDouble()){
 					AndNode andNode = new AndNode(root);
-					andNode.children.add(0, growTree2(andNode, depth - 1));
-					andNode.children.add(1, growTree2(andNode, depth - 1));
+					andNode.children.add(0, recGrowTree(andNode, depth - 1));
+					andNode.children.add(1, recGrowTree(andNode, depth - 1));
 					return andNode;
 				} else {
 					return getRandomTerminal(root);
@@ -214,9 +206,9 @@ public class Mux6Generator extends Generator {
 			case 3:
 				if (Generator.growStopProbability < random.nextDouble()){
 					IfNode ifNode = new IfNode(root);
-					ifNode.children.add(0, growTree2(ifNode, depth - 1));
-					ifNode.children.add(1, growTree2(ifNode, depth - 1));
-					ifNode.children.add(2, growTree2(ifNode, depth - 1));
+					ifNode.children.add(0, recGrowTree(ifNode, depth - 1));
+					ifNode.children.add(1, recGrowTree(ifNode, depth - 1));
+					ifNode.children.add(2, recGrowTree(ifNode, depth - 1));
 					return ifNode;
 				} else {
 					return getRandomTerminal(root);
@@ -230,19 +222,6 @@ public class Mux6Generator extends Generator {
 		}
 	}
 	
-	@Override
-	public Individual fitness(Node node) {
-		int count = 0;
-		boolean[] actualAnswer = getTrueResult();
-		
-		for(int i = 0; i < actualAnswer.length; i++){
-			if(actualAnswer[i] == node.eval(i)){
-				count++;
-			}
-		}
-		return new Individual(node, count/64f);
-	}
-
 	private boolean[] getTrueResult(){
 		boolean[] arr = new boolean[64];
 		for(int i = 0; i < 64; i ++){
@@ -254,7 +233,7 @@ public class Mux6Generator extends Generator {
 	private boolean computeResult(int input){
 		int addr = input >> addrShift;
 		int invaddr = 3 - addr;
-		int resmask = resMask6 >> addr;
+		int resmask = resMask >> addr;
 		int val = input & resmask;
 		int res = val >> invaddr;
 		return res != 0;

@@ -41,6 +41,11 @@ public class OrNode extends TwoChildNode{
 	}
 
 	@Override
+	public boolean eval(int input) {
+		return getLeftChild().eval(input) || getRightChild().eval(input);
+	}
+	
+	@Override
 	public String toString(){
 		return "or[" + getLeftChild().toString() + "," + getRightChild().toString() + "]";
 	}

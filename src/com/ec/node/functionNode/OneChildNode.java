@@ -44,11 +44,6 @@ public abstract class OneChildNode extends FunctionNode {
 	}
 
 	@Override
-	public boolean eval(int input) {
-		return !getChild().eval(input);
-	}
-
-	@Override
 	public int getDepth() {
 		return getChild().getDepth() + 1;				
 	}

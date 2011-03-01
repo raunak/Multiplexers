@@ -41,30 +41,29 @@ public abstract class ThreeChildNode extends FunctionNode {
 	public Vector<Node> enumerate() {
 		Vector<Node> v = new Vector<Node>();
 		v.add(this);
-		
+
 		Vector<Node> lenum = this.getLeftChild().enumerate();
-		if (null != lenum){
+		if (null != lenum) {
 			v.addAll(lenum);
 		}
-			
+
 		Vector<Node> menum = this.getMiddleChild().enumerate();
-		if (null != menum){
+		if (null != menum) {
 			v.addAll(menum);
 		}
-			
+
 		Vector<Node> renum = this.getRightChild().enumerate();
-		if (null != renum){
+		if (null != renum) {
 			v.addAll(renum);
 		}
-		
+
 		return v;
 	}
 
 	@Override
 	public int getDepth() {
-		return Math
-				.max(getLeftChild().getDepth(), Math.max(getMiddleChild()
-						.getDepth(), getRightChild().getDepth())) + 1;
+		return Math.max(getLeftChild().getDepth(), Math.max(getMiddleChild()
+				.getDepth(), getRightChild().getDepth())) + 1;
 	}
 
 	public Node getLeftChild() {
