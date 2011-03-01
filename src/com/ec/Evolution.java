@@ -36,7 +36,7 @@ public class Evolution {
 	private int populationSize = 300;
 	
 	/** Default tree depth. */
-	private final int maxDepth = 6;
+	public static final int maxDepth = 6;
 	
 	/** Type is Mux6 if set to 0; else Mux11. */
 	private int evolutionType;
@@ -188,9 +188,66 @@ public class Evolution {
 	}
 	
 	//TODO: Implement this
-	private Node[] crossover(Node father, Node mother){
-		Node[] n = {father, mother};
-		return n;
+	// change to private?
+	public Node[] crossover(Node father, Node mother) {
+		
+		int fd = father.getDepth();
+		int md = mother.getDepth();
+		System.out.println("fd: " + fd);
+		System.out.println("md: " + md);
+		if ( (fd != 0) &&  (md != 0) ) {
+			System.out.println("Both positive");
+			Vector<Node> fenum = father.enumerate();
+
+			int randomPoint = random.nextInt(fenum.size());
+			Node p1 = fenum.get(randomPoint);
+			int p1depth = p1.getDepth();
+			int depthLeft = maxDepth - p1.getLevel();
+			Vector<Node> menum = mother.enumBounded(depthLeft, p1depth);
+
+			randomPoint = random.nextInt(menum.size());
+			Node p2 = menum.get(randomPoint);
+			int c1 = random.nextInt(p1.children.size());
+			int c2 = random.nextInt(p2.children.size());
+			Node swapFromF = p1.children.get(c1);
+			Node swapFromM = p2.children.get(c2);
+			System.out.println("Swap from father: " + swapFromF);
+			System.out.println("Swap from mother: " + swapFromM);
+			p1.children.set(c1, swapFromM);
+			p2.children.set(c2, swapFromF);
+			Node[] n = { father, mother };
+			return n;
+		} else {
+			if (father.getDepth() == 0 && mother.getDepth() != 0) {
+				System.out.println("Father's depth is 0");
+				Vector<Node> menum = mother.enumerate();
+				int randomPoint = random.nextInt(menum.size());
+				Node p2 = menum.get(randomPoint);
+
+				int c2 = random.nextInt(p2.children.size());
+				Node p1 = p2.children.get(c2);
+				p2.children.set(c2, father);
+				System.out.println("Swap from father: " + father);
+				System.out.println("Swap from mother: " + p1);
+
+				Node[] n = { p1, mother };
+				return n;
+			} else {
+				System.out.println("Mother's depth is 0");
+				Vector<Node> fenum = father.enumerate();
+
+				int randomPoint = random.nextInt(fenum.size());
+				Node p1 = fenum.get(randomPoint);
+
+				int c1 = random.nextInt(p1.children.size());
+				Node p2 = p1.children.get(c1);
+				p1.children.set(c1, mother);
+				System.out.println("Swap from father: " + p2);
+				System.out.println("Swap from mother: " + mother);
+				Node[] n = { p2, father };
+				return n;
+			}
+		}
 	}
 	
 	private Node mutate(Node node){
