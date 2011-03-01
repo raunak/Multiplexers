@@ -26,8 +26,6 @@ public class D2 extends Mux6Node{
 
 	public static final byte mask = 1;
 	
-	public D2(){}
-	
 	public D2(Node node){
 		this.parent = node;
 	}
