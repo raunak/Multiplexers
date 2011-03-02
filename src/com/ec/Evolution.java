@@ -236,6 +236,8 @@ public class Evolution {
 			Node swapFromM = p2.children.get(c2);
 //			System.out.println("Swap from father: " + swapFromF);
 //			System.out.println("Swap from mother: " + swapFromM);
+			swapFromF.setParent(p2);
+			swapFromM.setParent(p1);
 			p1.children.set(c1, swapFromM);
 			p2.children.set(c2, swapFromF);
 			Node[] n = { father, mother };
@@ -248,12 +250,15 @@ public class Evolution {
 				Node p2 = menum.get(randomPoint);
 
 				int c2 = random.nextInt(p2.children.size());
-				Node p1 = p2.children.get(c2);
+				Node swapFromM = p2.children.get(c2);
+				father.setParent(p2);
 				p2.children.set(c2, father);
+				father.setParent(p2);
+				swapFromM.setParent(null);
 //				System.out.println("Swap from father: " + father);
 //				System.out.println("Swap from mother: " + p1);
 
-				Node[] n = { p1, mother };
+				Node[] n = { swapFromM, mother };
 				return n;
 			} else if (father.getDepth() == 0 && mother.getDepth() != 0) {
 				System.out.println("Mother's depth is 0");
@@ -263,11 +268,13 @@ public class Evolution {
 				Node p1 = fenum.get(randomPoint);
 
 				int c1 = random.nextInt(p1.children.size());
-				Node p2 = p1.children.get(c1);
+				Node swapFromF = p1.children.get(c1);
 				p1.children.set(c1, mother);
+				mother.setParent(p1);
+				swapFromF.setParent(null);
 //				System.out.println("Swap from father: " + p2);
 //				System.out.println("Swap from mother: " + mother);
-				Node[] n = { p2, father };
+				Node[] n = { swapFromF, father };
 				return n;
 			} else {
 				Node[] n = { mother, father };
