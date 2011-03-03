@@ -19,6 +19,8 @@ package com.ec.node;
 import java.util.Vector;
 
 /**
+ * <code>Mux11Node</code> represents terminal <code>Node</code> that belong to
+ * the Multiplexer 11 problem.
  * @version 1.0 
  */
 public abstract class Mux11Node extends Node{
@@ -33,7 +35,7 @@ public abstract class Mux11Node extends Node{
 
 	@Override
 	public Vector<Node> enumerate() {
-		return null;
+		return new Vector<Node>(0);
 	}
 	
 	@Override
