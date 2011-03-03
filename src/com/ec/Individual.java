@@ -19,34 +19,64 @@ package com.ec;
 import com.ec.node.Node;
 
 /**
- * @version 1.0 
+ * <code>Individual</code> represent a single program in Genetic Programming. An
+ * <code>Individual</code> holds both a root <code>Node</code> object and its
+ * fitness.
+ * 
+ * @author raunak
+ * @version 1.0
  */
-public class Individual implements Comparable<Individual>{
+public class Individual implements Comparable<Individual> {
+
+	/** <code>Node</code> holds the root to a program. */
 	private Node node;
+
+	/** a value which corresponds to the fitness of a program in a domain. */
 	private float fitness;
-	
-	public Individual(Node node){
-		this.node = node;
-	}
-	
-	public Individual(Node node, Float fitness){
+
+	/**
+	 * Constructs a <code>Individual</code> using the passed parameters.
+	 * @param node - root of a program.
+	 * @param fitness - fitness of a program
+	 */
+	public Individual(Node node, Float fitness) {
 		this.node = node;
 		this.fitness = fitness;
 	}
-	
-	public Node getNode(){
+
+	/**
+	 * Gets the <code>Node</code>.
+	 * 
+	 * @return node
+	 */
+	public Node getNode() {
 		return node;
 	}
-	
-	public float getFitness(){
+
+	/**
+	 * Gets the fitness
+	 * 
+	 * @return fitness
+	 */
+	public float getFitness() {
 		return fitness;
 	}
-	
-	public void setNode(Node node){
+
+	/**
+	 * Set the <code>Node</code>.
+	 * 
+	 * @param node - the root
+	 */
+	public void setNode(Node node) {
 		this.node = node;
 	}
-	
-	public void setFitness(Float fitness){
+
+	/**
+	 * Set the fitness.
+	 * 
+	 * @param fitness - fitness of the program.
+	 */
+	public void setFitness(Float fitness) {
 		this.fitness = fitness;
 	}
 
@@ -54,9 +84,9 @@ public class Individual implements Comparable<Individual>{
 	public int compareTo(Individual individual) {
 		return Float.compare(individual.fitness, this.fitness);
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return fitness + " : " + node.toString();
 	}
 }
