@@ -33,12 +33,6 @@ public abstract class ThreeChildNode extends FunctionNode {
 	}
 
 	@Override
-	public boolean eval(int input) {
-		return getLeftChild().eval(input) ? getMiddleChild().eval(input)
-				: getRightChild().eval(input);
-	}
-
-	@Override
 	public Vector<Node> enumerate() {
 		Vector<Node> v = new Vector<Node>();
 		v.add(this);
