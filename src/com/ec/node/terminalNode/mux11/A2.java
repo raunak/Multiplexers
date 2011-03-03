@@ -25,7 +25,7 @@ import com.ec.node.Node;
 public class A2 extends Mux11Node{
 	
 	/** Bit mask for <code>A2</code> terminal node. */
-	public static final byte mask = 8;
+	public static final short mask = 256;
 
 	public A2(Node node){
 		this.parent = node;
