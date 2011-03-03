@@ -24,7 +24,7 @@ import com.ec.node.Node;
  */
 public class D2 extends Mux6Node{
 
-	public static final byte mask = 1;
+	public static final byte mask = 2;
 	
 	public D2(Node node){
 		this.parent = node;
