@@ -29,12 +29,14 @@ public class OrNode extends TwoChildNode{
 		children = new Vector<Node>(2);
 	}
 	
-	public OrNode(Node node){
-		this.parent = node;
+	public OrNode(Node parent){
+		this.parent = parent;
 		children = new Vector<Node>(2);
 	}
 	
-	public OrNode(Node leftChild, Node rightChild){
+	public OrNode(Node parent, Node leftChild, Node rightChild){
+		this.parent = parent;
+		
 		children = new Vector<Node>(2);
 		children.add(0, leftChild);
 		children.add(1, rightChild);

@@ -29,9 +29,15 @@ public class NotNode extends OneChildNode{
 		children = new Vector<Node>(1);
 	}
 	
-	public NotNode(Node node){
-		this.parent = node;
+	public NotNode(Node parent){
+		this.parent = parent;
 		children = new Vector<Node>(1);
+	}
+	
+	public NotNode(Node parent, Node node){
+		this.parent = parent;
+		children = new Vector<Node>(1);
+		children.add(0, node);
 	}
 	
 	@Override

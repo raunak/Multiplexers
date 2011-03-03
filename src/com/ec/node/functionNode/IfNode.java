@@ -29,16 +29,24 @@ public class IfNode extends ThreeChildNode{
 		children = new Vector<Node>(3);
 	}
 	
-	public IfNode(Node node){
-		this.parent = node;
+	public IfNode(Node parent){
+		this.parent = parent;
 		children = new Vector<Node>(3);
 	}
 	
-	public IfNode(Node leftChild, Node middleChild, Node rightChild){
+	public IfNode(Node parent, Node leftChild, Node middleChild, Node rightChild){
+		this.parent = parent;
+		
 		children = new Vector<Node>(3);
 		children.add(0, leftChild);
 		children.add(1, middleChild);
 		children.add(2, rightChild);
+	}
+	
+	@Override
+	public boolean eval(int input) {
+		return getLeftChild().eval(input) ? getMiddleChild().eval(input)
+				: getRightChild().eval(input);
 	}
 	
 	@Override

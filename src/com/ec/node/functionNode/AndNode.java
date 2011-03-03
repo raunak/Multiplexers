@@ -29,12 +29,14 @@ public class AndNode extends TwoChildNode {
 		children = new Vector<Node>(2);
 	}
 	
-	public AndNode(Node node){
-		this.parent = node;
+	public AndNode(Node parent){
+		this.parent = parent;
 		children = new Vector<Node>(2);
 	}
 	
-	public AndNode(Node leftChild, Node rightChild) {
+	public AndNode(Node parent, Node leftChild, Node rightChild) {
+		this.parent = parent;
+		
 		children = new Vector<Node>(2);
 		children.add(0, leftChild);
 		children.add(1, rightChild);
