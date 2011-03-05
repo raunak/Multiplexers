@@ -17,8 +17,6 @@
 package com.ec;
 
 import com.ec.Evolution.EvolutionType;
-import com.ec.generator.Mux11Generator;
-import com.ec.node.Node;
 
 /**
  * @version 1.0
@@ -26,7 +24,7 @@ import com.ec.node.Node;
 public class Main {
 	
 	public static void main(String args[]){
-		Evolution evolution = new Evolution(EvolutionType.MUX11, 300);
+		Evolution evolution = new Evolution(EvolutionType.MUX11, 10000);
 		evolution.evolve();
 	}
 }
