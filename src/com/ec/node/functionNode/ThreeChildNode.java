@@ -22,9 +22,12 @@ import com.ec.Evolution;
 import com.ec.node.Node;
 
 /**
+ * <code>ThreeChildNode</code> represent all the nodes that have three children.
+ * 
+ * @author raunak
  * @version 1.0
  */
-public abstract class ThreeChildNode extends FunctionNode {
+public abstract class ThreeChildNode extends Node {
 
 	@Override
 	public int countNodes() {
@@ -51,7 +54,7 @@ public abstract class ThreeChildNode extends FunctionNode {
 		if (null != renum) {
 			v.addAll(renum);
 		}
-		
+
 		return v;
 	}
 
@@ -81,28 +84,58 @@ public abstract class ThreeChildNode extends FunctionNode {
 				.getDepth(), getRightChild().getDepth())) + 1;
 	}
 
+	/**
+	 * Gets the left child node
+	 * 
+	 * @return left child <code>Node</code>.
+	 */
 	public Node getLeftChild() {
 		return children.get(0);
 	}
 
-	public void setLeftChild(Node node) {
-		children.set(0, node);
+	/**
+	 * Set the left child node for <code>ThreeChildNode</code>.
+	 * 
+	 * @param leftChild
+	 */
+	public void setLeftChild(Node leftChild) {
+		children.set(0, leftChild);
 	}
 
+	/**
+	 * Gets the left child node
+	 * 
+	 * @return middle child <code>Node</code>.
+	 */
 	public Node getMiddleChild() {
 		return children.get(1);
 	}
 
-	public void setMiddleChild(Node node) {
-		children.set(1, node);
+	/**
+	 * Set the middle child node for <code>ThreeChildNode</code>.
+	 * 
+	 * @param middleChild
+	 */
+	public void setMiddleChild(Node middleChild) {
+		children.set(1, middleChild);
 	}
 
+	/**
+	 * Gets the left child node
+	 * 
+	 * @return right child <code>Node</code>.
+	 */
 	public Node getRightChild() {
 		return children.get(2);
 	}
 
-	public void setRightChild(Node node) {
-		children.set(2, node);
+	/**
+	 * Set the right child node for <code>ThreeChildNode</code>.
+	 * 
+	 * @param rightChild
+	 */
+	public void setRightChild(Node rightChild) {
+		children.set(2, rightChild);
 	}
 
 }

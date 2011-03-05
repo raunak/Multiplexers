@@ -21,31 +21,57 @@ import java.util.Vector;
 import com.ec.node.Node;
 
 /**
+ * <code>IfNode</code> has three children; one on left (the condition child),
+ * one on center (to execute if condition is true), and one on right (to execute
+ * if condition is false).
+ * 
+ * @author raunak
  * @version 1.0
  */
-public class IfNode extends ThreeChildNode{
-	
-	public IfNode(){
-		children = new Vector<Node>(3);
+public class IfNode extends ThreeChildNode {
+
+	/**
+	 * Constructs <code>IfNode</code> with parent set to <code>null</code>.
+	 */
+	public IfNode() {
+		this(null);
 	}
-	
-	public IfNode(Node parent){
+
+	/**
+	 * Constructs <code>IfNode</code> using passed parameters.
+	 * 
+	 * @param parent
+	 *            - The parent of this node.
+	 */
+	public IfNode(Node parent) {
 		this.parent = parent;
 		children = new Vector<Node>(3);
 	}
-	
-	public IfNode(Node parent, Node leftChild, Node middleChild, Node rightChild){
+
+	/**
+	 * Constructs <code>IfNode</code> using passed parameters.
+	 * 
+	 * @param parent
+	 *            - The parent of <code>IfNode</code>.
+	 * @param leftChild
+	 *            - The node to the left of <code>IfNode</code>
+	 * @param middleChild
+	 *            - The node to the middle of <code>IfNode</code>
+	 * @param rightChild
+	 *            - The node to the right of <code>IfNode</code>
+	 */
+	public IfNode(Node parent, Node leftChild, Node middleChild, Node rightChild) {
 		this.parent = parent;
-		
+
 		children = new Vector<Node>(3);
 		children.add(0, leftChild);
 		children.add(1, middleChild);
 		children.add(2, rightChild);
 	}
-	
+
 	@Override
-	public Node clone(Node parent){
-		if(parent == null){
+	public Node clone(Node parent) {
+		if (parent == null) {
 			IfNode ifNode = new IfNode();
 			ifNode.children.add(0, getLeftChild().clone(ifNode));
 			ifNode.children.add(1, getMiddleChild().clone(ifNode));
@@ -59,16 +85,18 @@ public class IfNode extends ThreeChildNode{
 			return ifNode;
 		}
 	}
-	
+
 	@Override
 	public boolean eval(int input) {
 		return getLeftChild().eval(input) ? getMiddleChild().eval(input)
 				: getRightChild().eval(input);
 	}
-	
+
 	@Override
-	public String toString(){
-		return "If[" + getLeftChild().toString() + "," + getMiddleChild().toString() + "," + getRightChild().toString() + "]";
+	public String toString() {
+		return "If[" + getLeftChild().toString() + ","
+				+ getMiddleChild().toString() + ","
+				+ getRightChild().toString() + "]";
 	}
 
 }

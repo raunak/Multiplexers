@@ -23,9 +23,12 @@ import com.ec.node.Node;
 
 
 /**
+ * <code>TwoChildNode</code> represent all the nodes that have two children.
+ *  
+ * @author raunak
  * @version 1.0
  */
-public abstract class TwoChildNode extends FunctionNode {
+public abstract class TwoChildNode extends Node {
 
 	@Override
 	public int countNodes() {
@@ -71,20 +74,40 @@ public abstract class TwoChildNode extends FunctionNode {
 		return Math.max(getLeftChild().getDepth(), getRightChild().getDepth()) + 1;
 	}
 
+	/**
+	 * Gets the left child node
+	 * 
+	 * @return left child <code>Node</code>.
+	 */
 	public Node getLeftChild() {
 		return children.get(0);
 	}
 
-	public void setLeftChild(Node node) {
-		children.set(0, node);
+	/**
+	 * Set the left child node for <code>TwoChildNode</code>.
+	 * 
+	 * @param leftChild
+	 */
+	public void setLeftChild(Node leftChild) {
+		children.set(0, leftChild);
 	}
 
+	/**
+	 * Gets the right child node
+	 * 
+	 * @return right child <code>Node</code>.
+	 */
 	public Node getRightChild() {
 		return children.get(1);
 	}
 
-	public void setRightChild(Node node) {
-		children.set(1, node);
+	/**
+	 * Set the right child node for <code>TwoChildNode</code>.
+	 * 
+	 * @param rightChild
+	 */
+	public void setRightChild(Node rightChild) {
+		children.set(1, rightChild);
 	}
 
 }

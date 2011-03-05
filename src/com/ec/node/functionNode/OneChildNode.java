@@ -22,9 +22,12 @@ import com.ec.Evolution;
 import com.ec.node.Node;
 
 /**
+ * <code>OneChildNode</code> represent all the nodes that have one child. 
+ * 
+ * @author raunak
  * @version 1.0
  */
-public abstract class OneChildNode extends FunctionNode {
+public abstract class OneChildNode extends Node {
 
 	@Override
 	public int countNodes() {
@@ -62,11 +65,21 @@ public abstract class OneChildNode extends FunctionNode {
 		return getChild().getDepth() + 1;
 	}
 
-	public void setChild(Node node) {
-		children.set(0, node);
-	}
-
+	/**
+	 * Gets the child node
+	 * 
+	 * @return <code>Node</code> child.
+	 */
 	public Node getChild() {
 		return children.get(0);
+	}
+
+	/**
+	 * Set the child node for <code>OneChildNode</code>.
+	 * 
+	 * @param child
+	 */
+	public void setChild(Node child) {
+		children.set(0, child);
 	}
 }

@@ -21,30 +21,52 @@ import java.util.Vector;
 import com.ec.node.Node;
 
 /**
+ * <code>OrNode</code> has two children; one on left, and one on right.
+ * <code>OrNode</code> uses logical <code>or</code> when evaluating itself.
+ * 
  * @version 1.0
  */
-public class OrNode extends TwoChildNode{
-	
-	public OrNode(){
-		children = new Vector<Node>(2);
+public class OrNode extends TwoChildNode {
+
+	/**
+	 * Constructs <code>OrNode</code> with parent set to <code>null</code>.
+	 */
+	public OrNode() {
+		this(null);
 	}
-	
-	public OrNode(Node parent){
+
+	/**
+	 * Constructs <code>OrNode</code> using passed parameters.
+	 * 
+	 * @param parent
+	 *            - The parent of this node.
+	 */
+	public OrNode(Node parent) {
 		this.parent = parent;
 		children = new Vector<Node>(2);
 	}
-	
-	public OrNode(Node parent, Node leftChild, Node rightChild){
+
+	/**
+	 * Constructs <code>OrNode</code> using passed parameters.
+	 * 
+	 * @param parent
+	 *            - The parent of <code>OrNode</code>.
+	 * @param leftChild
+	 *            - The node to the left of <code>OrNode</code>
+	 * @param rightChild
+	 *            - The node to the right of <code>OrNode</code>
+	 */
+	public OrNode(Node parent, Node leftChild, Node rightChild) {
 		this.parent = parent;
-		
+
 		children = new Vector<Node>(2);
 		children.add(0, leftChild);
 		children.add(1, rightChild);
 	}
 
 	@Override
-	public Node clone(Node parent){
-		if(parent == null){
+	public Node clone(Node parent) {
+		if (parent == null) {
 			OrNode orNode = new OrNode();
 			orNode.children.add(0, getLeftChild().clone(orNode));
 			orNode.children.add(1, getRightChild().clone(orNode));
@@ -56,14 +78,15 @@ public class OrNode extends TwoChildNode{
 			return orNode;
 		}
 	}
-	
+
 	@Override
 	public boolean eval(int input) {
 		return getLeftChild().eval(input) || getRightChild().eval(input);
 	}
-	
+
 	@Override
-	public String toString(){
-		return "Or[" + getLeftChild().toString() + "," + getRightChild().toString() + "]";
+	public String toString() {
+		return "Or[" + getLeftChild().toString() + ","
+				+ getRightChild().toString() + "]";
 	}
 }

@@ -21,28 +21,49 @@ import java.util.Vector;
 import com.ec.node.Node;
 
 /**
- * @version 1.0 
+ * <code>NotNode</code> has one child and uses logical <code>not</code> when
+ * evaluating itself.
+ * 
+ * @author raunak
+ * @version 1.0
  */
-public class NotNode extends OneChildNode{
-	
-	public NotNode(){
-		children = new Vector<Node>(1);
+public class NotNode extends OneChildNode {
+
+	/**
+	 * Constructs <code>NotNode</code> with parent set to <code>null</code>.
+	 */
+	public NotNode() {
+		this(null);
 	}
-	
-	public NotNode(Node parent){
+
+	/**
+	 * Constructs <code>NotNode</code> using passed parameters.
+	 * 
+	 * @param parent
+	 *            - The parent of this node.
+	 */
+	public NotNode(Node parent) {
 		this.parent = parent;
 		children = new Vector<Node>(1);
 	}
-	
-	public NotNode(Node parent, Node node){
+
+	/**
+	 * Constructs <code>NotNode</code> using passed parameters.
+	 * 
+	 * @param parent
+	 *            - The parent of <code>NotNode</code>.
+	 * @param child
+	 *            - The node to the middle of <code>NotNode</code>
+	 */
+	public NotNode(Node parent, Node child) {
 		this.parent = parent;
 		children = new Vector<Node>(1);
-		children.add(0, node);
+		children.add(0, child);
 	}
-	
+
 	@Override
-	public Node clone(Node parent){
-		if(parent == null){
+	public Node clone(Node parent) {
+		if (parent == null) {
 			NotNode notNode = new NotNode();
 			notNode.children.add(0, getChild().clone(notNode));
 			return notNode;
@@ -52,14 +73,14 @@ public class NotNode extends OneChildNode{
 			return notNode;
 		}
 	}
-	
+
 	@Override
 	public boolean eval(int input) {
 		return !getChild().eval(input);
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return "Not[" + getChild().toString() + "]";
 	}
 }
