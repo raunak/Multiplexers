@@ -21,7 +21,7 @@ import java.util.Vector;
 /**
  * @version 1.0
  */
-public abstract class Node {
+public abstract class Node{
 
 	/** Parent node */
 	public Node parent;
@@ -45,6 +45,9 @@ public abstract class Node {
 	/** returns the number of nodes */
 	public abstract int countNodes();
 
+	/** Clones an object */
+	public abstract Node clone(Node root);
+	
 	/**
 	 * Gets the level of <code>Node</code> relative to root node.
 	 * 
