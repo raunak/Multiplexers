@@ -43,12 +43,27 @@ public class OrNode extends TwoChildNode{
 	}
 
 	@Override
+	public Node clone(Node parent){
+		if(parent == null){
+			OrNode orNode = new OrNode();
+			orNode.children.add(0, getLeftChild().clone(orNode));
+			orNode.children.add(1, getRightChild().clone(orNode));
+			return orNode;
+		} else {
+			OrNode orNode = new OrNode(parent);
+			orNode.children.add(0, getLeftChild().clone(orNode));
+			orNode.children.add(1, getRightChild().clone(orNode));
+			return orNode;
+		}
+	}
+	
+	@Override
 	public boolean eval(int input) {
 		return getLeftChild().eval(input) || getRightChild().eval(input);
 	}
 	
 	@Override
 	public String toString(){
-		return "or[" + getLeftChild().toString() + "," + getRightChild().toString() + "]";
+		return "Or[" + getLeftChild().toString() + "," + getRightChild().toString() + "]";
 	}
 }

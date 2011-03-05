@@ -44,6 +44,23 @@ public class IfNode extends ThreeChildNode{
 	}
 	
 	@Override
+	public Node clone(Node parent){
+		if(parent == null){
+			IfNode ifNode = new IfNode();
+			ifNode.children.add(0, getLeftChild().clone(ifNode));
+			ifNode.children.add(1, getMiddleChild().clone(ifNode));
+			ifNode.children.add(2, getRightChild().clone(ifNode));
+			return ifNode;
+		} else {
+			IfNode ifNode = new IfNode(parent);
+			ifNode.children.add(0, getLeftChild().clone(ifNode));
+			ifNode.children.add(1, getMiddleChild().clone(ifNode));
+			ifNode.children.add(2, getRightChild().clone(ifNode));
+			return ifNode;
+		}
+	}
+	
+	@Override
 	public boolean eval(int input) {
 		return getLeftChild().eval(input) ? getMiddleChild().eval(input)
 				: getRightChild().eval(input);
@@ -51,7 +68,7 @@ public class IfNode extends ThreeChildNode{
 	
 	@Override
 	public String toString(){
-		return "if[" + getLeftChild().toString() + "," + getMiddleChild().toString() + "," + getRightChild().toString() + "]";
+		return "If[" + getLeftChild().toString() + "," + getMiddleChild().toString() + "," + getRightChild().toString() + "]";
 	}
 
 }

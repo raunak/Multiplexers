@@ -41,6 +41,21 @@ public class AndNode extends TwoChildNode {
 		children.add(0, leftChild);
 		children.add(1, rightChild);
 	}
+		
+	@Override
+	public Node clone(Node parent){
+		if(parent == null){
+			AndNode andNode = new AndNode();
+			andNode.children.add(0, getLeftChild().clone(andNode));
+			andNode.children.add(1, getRightChild().clone(andNode));
+			return andNode;
+		} else {
+			AndNode andNode = new AndNode(parent);
+			andNode.children.add(0, getLeftChild().clone(andNode));
+			andNode.children.add(1, getRightChild().clone(andNode));
+			return andNode;
+		}
+	}
 	
 	@Override
 	public boolean eval(int input) {
@@ -49,7 +64,7 @@ public class AndNode extends TwoChildNode {
 
 	@Override
 	public String toString() {
-		return "and[" + getLeftChild().toString() + ","
+		return "And[" + getLeftChild().toString() + ","
 				+ getRightChild().toString() + "]";
 	}
 
