@@ -22,6 +22,7 @@ import java.util.Vector;
  * <code>Mux6Node</code> represents terminal <code>Node</code> that belong to
  * the Multiplexer 6 problem.
  * 
+ * @author raunak
  * @version 1.0
  */
 public abstract class Mux6Node extends Node {
