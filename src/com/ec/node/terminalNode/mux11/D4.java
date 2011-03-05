@@ -20,6 +20,9 @@ import com.ec.node.Mux11Node;
 import com.ec.node.Node;
 
 /**
+ * <code>D4</code> is one of 11 Boolean-valued terminal and it corresponds to
+ * data bit 4.
+ * 
  * @author raunak
  * @version 1.0
  */
@@ -28,8 +31,16 @@ public class D4 extends Mux11Node {
 	/** Bit mask for <code>D4</code> terminal node. */
 	public static final byte mask = 8;
 
-	public D4(Node node) {
-		this.parent = node;
+	/**
+	 * Constructs <code>D4</code> using the passed parameter.
+	 * 
+	 * @param parent
+	 *            - <code>Node</code> </br> <strong>Note:</strong> Passing
+	 *            <code>null</code> indicates that this <code>Node</code> has no
+	 *            parent.
+	 */
+	public D4(Node parent) {
+		this.parent = parent;
 	}
 
 	@Override

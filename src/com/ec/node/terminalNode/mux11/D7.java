@@ -20,6 +20,9 @@ import com.ec.node.Mux11Node;
 import com.ec.node.Node;
 
 /**
+ * <code>D7</code> is one of 11 Boolean-valued terminal and it corresponds to
+ * data bit 7.
+ * 
  * @author raunak
  * @version 1.0
  */
@@ -28,8 +31,16 @@ public class D7 extends Mux11Node {
 	/** Bit mask for <code>D7</code> terminal node. */
 	public static final byte mask = 1;
 
-	public D7(Node node) {
-		this.parent = node;
+	/**
+	 * Constructs <code>D7</code> using the passed parameter.
+	 * 
+	 * @param parent
+	 *            - <code>Node</code> </br> <strong>Note:</strong> Passing
+	 *            <code>null</code> indicates that this <code>Node</code> has no
+	 *            parent.
+	 */
+	public D7(Node parent) {
+		this.parent = parent;
 	}
 
 	@Override

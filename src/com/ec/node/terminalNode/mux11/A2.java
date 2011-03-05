@@ -20,6 +20,9 @@ import com.ec.node.Mux11Node;
 import com.ec.node.Node;
 
 /**
+ * <code>A2</code> is one of 11 Boolean-valued terminal and it corresponds to
+ * address 2.
+ * 
  * @author raunak
  * @version 1.0
  */
@@ -28,8 +31,16 @@ public class A2 extends Mux11Node {
 	/** Bit mask for <code>A2</code> terminal node. */
 	public static final short mask = 256;
 
-	public A2(Node node) {
-		this.parent = node;
+	/**
+	 * Constructs <code>A2</code> using the passed parameter.
+	 * 
+	 * @param parent
+	 *            - <code>Node</code> </br><strong>Note:</strong> Passing
+	 *            <code>null</code> indicates that this <code>Node</code> has no
+	 *            parent.
+	 */
+	public A2(Node parent) {
+		this.parent = parent;
 	}
 
 	@Override

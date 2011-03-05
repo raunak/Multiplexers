@@ -20,22 +20,34 @@ import com.ec.node.Mux6Node;
 import com.ec.node.Node;
 
 /**
+ * <code>D3</code> is one of 6 Boolean-valued terminal and it corresponds to
+ * data bit 3.
+ * 
  * @author raunak
  * @version 1.0
  */
-public class D3 extends Mux6Node{
-	
+public class D3 extends Mux6Node {
+
+	/** Bit mask for <code>D3</code> terminal node. */
 	public static final byte mask = 1;
-	
-	public D3(Node node){
+
+	/**
+	 * Constructs <code>A0</code> using the passed parameter.
+	 * 
+	 * @param parent
+	 *            - <code>Node</code> </br><strong>Note:</strong> Passing
+	 *            <code>null</code> indicates that this <code>Node</code> has no
+	 *            parent.
+	 */
+	public D3(Node node) {
 		this.parent = node;
 	}
 
 	@Override
 	public boolean eval(int input) {
-		return ((input & D3.mask) != 0); 
+		return ((input & D3.mask) != 0);
 	}
-	
+
 	@Override
 	public Node clone(Node parent) {
 		return new D3(parent);
