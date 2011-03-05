@@ -20,6 +20,7 @@ import com.ec.node.Mux6Node;
 import com.ec.node.Node;
 
 /**
+ * @author raunak
  * @version 1.0
  */
 public class D2 extends Mux6Node{
@@ -33,5 +34,10 @@ public class D2 extends Mux6Node{
 	@Override
 	public boolean eval(int input) {
 		return ((input & D2.mask) != 0); 
+	}
+	
+	@Override
+	public Node clone(Node parent) {
+		return new D2(parent);
 	}
 }
