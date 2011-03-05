@@ -25,10 +25,10 @@ import com.ec.node.terminalNode.mux6.*;
 public class Mux6Generator extends Generator {
 	/** */
 	private static final int resMask = 8;
-	
+
 	/** */
 	private static final int addrShift = 4;
-	
+
 	/** */
 	private static final boolean[] correctAnswer = getTrueResult();
 
@@ -53,7 +53,7 @@ public class Mux6Generator extends Generator {
 	}
 
 	@Override
-	protected float fitness(Node node) {
+	protected double fitness(Node node) {
 		int count = 0;
 
 		for (int i = 0; i < correctAnswer.length; i++) {
@@ -61,7 +61,7 @@ public class Mux6Generator extends Generator {
 				count++;
 			}
 		}
-		return count / 64f;
+		return count / 64d;
 	}
 
 	/**

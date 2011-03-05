@@ -36,7 +36,7 @@ public class Mux11Generator extends Generator {
 
 	/** */
 	private static final int resMask = 128;
-	
+
 	/** */
 	private static final int addrShift = 8;
 
@@ -71,7 +71,7 @@ public class Mux11Generator extends Generator {
 	}
 
 	@Override
-	public float fitness(Node node) {
+	public double fitness(Node node) {
 		int count = 0;
 		boolean[] actualAnswer = getTrueResult();
 
@@ -80,7 +80,7 @@ public class Mux11Generator extends Generator {
 				count++;
 			}
 		}
-		return count / 2048f;
+		return count / 2048d;
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Mux11Generator extends Generator {
 		}
 		return arr;
 	}
-	
+
 	/**
 	 * 
 	 * @param input

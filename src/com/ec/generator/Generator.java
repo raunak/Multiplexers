@@ -31,11 +31,11 @@ import com.ec.node.functionNode.OrNode;
 public abstract class Generator {
 
 	/** Default probablity for stoping grow tree */
-	protected static float growStopProbability = 0.25f;
+	protected static double growStopProbability = 0.25;
 
 	/** */
 	protected static final int FULLTREE = 4;
-	
+
 	/** */
 	protected static final int GROWTREE = 5;
 
@@ -46,7 +46,7 @@ public abstract class Generator {
 	protected abstract Node getRandomTerminal(Node root);
 
 	/** */
-	protected abstract float fitness(Node node);
+	protected abstract double fitness(Node node);
 
 	/**
 	 * 
