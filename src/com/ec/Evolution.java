@@ -25,54 +25,94 @@ import com.ec.generator.Mux6Generator;
 import com.ec.node.Node;
 
 /**
+ * <code>Evolution</code> manages the evolution of both Multiplexer 6 and
+ * Multiplexer 11 problem. It has one public method <code>.evolve()</code>. One
+ * can define both the population size and the problem type when creating an
+ * instance of <code>Evolution</code>.
+ * 
+ * @author raunak
  * @version 1.0
  */
 public class Evolution {
 
-	/** Generation counter. */
+	/**
+	 * Generation counter.
+	 */
 	private int currGen;
 
-	/** Default population size. */
+	/**
+	 * Default population size.
+	 */
 	private int populationSize = 300;
 
-	/** Default tree depth. */
+	/**
+	 * Default tree depth.
+	 */
 	public static final int maxDepth = 6;
 
-	/** Type is Mux6 if set to 0; else Mux11. */
+	/**
+	 * Type is Mux6 if set to 0; else Mux11.
+	 */
 	private int evolutionType;
 
-	/** Crossover probability. */
+	/**
+	 * Crossover probability.
+	 */
 	private double cxProb = 0.7;
 
-	/** Mutation probability. */
+	/**
+	 * Mutation probability.
+	 */
 	private double mtProb = 0.9;
 
-	/** Static instance of class <code>Random</code>. */
+	/**
+	 * Static instance of class <code>Random</code>.
+	 */
 	private static final Random random = new Random();
 
-	/** The best individual thus far. */
+	/**
+	 * The best individual thus far.
+	 */
 	private Individual individual;
 
-	/** Holds x number of individuals, where x refers to the population size. */
+	/**
+	 * Holds x number of individuals, where x refers to the population size.
+	 */
 	public Individual[] population;
 
-	/** <code>Mux6Generator</code> object */
+	/**
+	 * <code>Mux6Generator</code> object
+	 */
 	private Mux6Generator mux6;
 
-	/** <code>Mux11Generator</code> object */
+	/**
+	 * <code>Mux11Generator</code> object
+	 */
 	private Mux11Generator mux11;
 
+	/**
+	 * 
+	 * @param type
+	 */
 	public Evolution(int type) {
 		this.evolutionType = type;
 		this.population = new Individual[populationSize];
 	}
 
+	/**
+	 * 
+	 * @param type
+	 * @param populationSize
+	 */
 	public Evolution(int type, int populationSize) {
 		this.evolutionType = type;
 		this.populationSize = populationSize;
 		this.population = new Individual[populationSize];
 	}
 
+	/**
+	 * 
+	 */
 	public void evolve() {
 		generatePopulation();
 
@@ -83,6 +123,9 @@ public class Evolution {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void evolveMux6() {
 		individual = getBestIndividual();
 
@@ -119,6 +162,9 @@ public class Evolution {
 				+ individual.toString());
 	}
 
+	/**
+	 * 
+	 */
 	private void evolveMux11() {
 		individual = getBestIndividual();
 
@@ -154,7 +200,10 @@ public class Evolution {
 				+ individual.toString());
 	}
 
-	public void generatePopulation() {
+	/**
+	 * 
+	 */
+	private void generatePopulation() {
 		if (evolutionType == EvolutionType.MUX6) {
 			mux6 = new Mux6Generator();
 			generateMux6Population();
@@ -164,6 +213,9 @@ public class Evolution {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void generateMux6Population() {
 		int tDepth1 = maxDepth - 1;
 		int tDepth2 = maxDepth - 2;
@@ -191,6 +243,9 @@ public class Evolution {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	private void generateMux11Population() {
 		int tDepth1 = maxDepth - 1;
 		int tDepth2 = maxDepth - 2;
@@ -219,6 +274,12 @@ public class Evolution {
 		}
 	}
 
+	/**
+	 * 
+	 * @param father
+	 * @param mother
+	 * @return
+	 */
 	private Node[] probCrossover(Node father, Node mother) {
 		Node[] children = { father, mother };
 
@@ -245,15 +306,7 @@ public class Evolution {
 			int p1depth = p1.getDepth();
 			int depthLeft = maxDepth - p1.getLevel();
 			Vector<Node> menum = mother.enumBounded(depthLeft, p1depth);
-			if (menum.size() == 0) {
-				System.out.println("f: " + father);
-				System.out.println("m: " + mother);
-				System.out.println("fd: " + fd);
-				System.out.println("md: " + md);
-				System.out.println("p1: " + p1);
-				System.out.println("menum size: " + menum.size());
-				System.out.println("menum: " + menum);
-			}
+
 			randomPoint = random.nextInt(menum.size());
 			Node p2 = menum.get(randomPoint);
 			int c1 = random.nextInt(p1.children.size());
@@ -302,7 +355,12 @@ public class Evolution {
 		}
 	}
 
-	public Node mutate(Node node) {
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
+	private Node mutate(Node node) {
 		if (evolutionType == EvolutionType.MUX6) {
 			return probMutate6(node.clone(null));
 		} else if (evolutionType == EvolutionType.MUX11) {
@@ -312,6 +370,11 @@ public class Evolution {
 		}
 	}
 
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
 	private Node probMutate6(Node node) {
 		if (random.nextDouble() > mtProb) {
 			return mutateMux6(node);
@@ -319,6 +382,11 @@ public class Evolution {
 			return node;
 	}
 
+	/**
+	 * 
+	 * @param node
+	 * @return
+	 */
 	private Node probMutate11(Node node) {
 		if (random.nextDouble() > mtProb) {
 			return mutateMux11(node);
@@ -326,6 +394,11 @@ public class Evolution {
 			return node;
 	}
 
+	/**
+	 * 
+	 * @param root
+	 * @return
+	 */
 	private Node mutateMux6(Node root) {
 		Vector<Node> enumeration = root.enumerate();
 
@@ -364,6 +437,11 @@ public class Evolution {
 		return root;
 	}
 
+	/**
+	 * 
+	 * @param root
+	 * @return
+	 */
 	private Node mutateMux11(Node root) {
 		Vector<Node> enumeration = root.enumerate();
 
@@ -418,13 +496,10 @@ public class Evolution {
 		return selectedIndividuals;
 	}
 
-	@SuppressWarnings("unused")
-	private Individual[] getSortedPopulation() {
-		Individual[] individuals = population.clone();
-		Arrays.sort(individuals);
-		return individuals;
-	}
-
+	/**
+	 * 
+	 * @return
+	 */
 	private Individual getBestIndividual() {
 		Individual bestIndividual = population[0];
 
@@ -437,6 +512,11 @@ public class Evolution {
 		return bestIndividual;
 	}
 
+	/**
+	 * 
+	 * @author raunak
+	 * @version 1.0
+	 */
 	static class EvolutionType {
 		public static final int MUX6 = 0;
 		public static final int MUX11 = 1;
