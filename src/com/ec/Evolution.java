@@ -42,10 +42,10 @@ public class Evolution {
 	private int evolutionType;
 
 	/** Crossover probability. */
-	private float cxProb = 0.7f;
+	private double cxProb = 0.7;
 
 	/** Mutation probability. */
-	private float mtProb = 0.1f;
+	private double mtProb = 0.9;
 
 	/** Static instance of class <code>Random</code>. */
 	private static final Random random = new Random();
@@ -54,7 +54,7 @@ public class Evolution {
 	private Individual individual;
 
 	/** Holds x number of individuals, where x refers to the population size. */
-	private Individual[] population;
+	public Individual[] population;
 
 	/** <code>Mux6Generator</code> object */
 	private Mux6Generator mux6;
@@ -108,8 +108,10 @@ public class Evolution {
 			}
 
 			population = newPopulation;
-			if (getSortedPopulation()[0].getFitness() > individual.getFitness()) {
-				individual = getSortedPopulation()[0];
+
+			Individual tmp = getBestIndividual();
+			if (tmp.getFitness() > individual.getFitness()) {
+				individual = tmp;
 			}
 			currGen++;
 		}
@@ -142,11 +144,14 @@ public class Evolution {
 			}
 
 			population = newPopulation;
-			if (getSortedPopulation()[0].getFitness() > individual.getFitness()) {
-				individual = getSortedPopulation()[0];
+			Individual tmp = getBestIndividual();
+			if (tmp.getFitness() > individual.getFitness()) {
+				individual = tmp;
 			}
 			currGen++;
 		}
+		System.out.println("Generation : " + currGen + " Individual: "
+				+ individual.toString());
 	}
 
 	public void generatePopulation() {
@@ -171,7 +176,7 @@ public class Evolution {
 				population[i + 1] = mux6.createIndividual(mux6
 						.growTree(tDepth1));
 				population[i + 2] = mux6.createIndividual(mux6
-						.growTree(tDepth1));
+						.growTree(tDepth2));
 
 				// Full Tree
 				population[i + 3] = mux6.createIndividual(mux6
@@ -199,7 +204,7 @@ public class Evolution {
 				population[i + 1] = mux11.createIndividual(mux11
 						.growTree(tDepth1));
 				population[i + 2] = mux11.createIndividual(mux11
-						.growTree(tDepth1));
+						.growTree(tDepth2));
 
 				// Full Tree
 				population[i + 3] = mux11.createIndividual(mux11
@@ -217,8 +222,8 @@ public class Evolution {
 	private Node[] probCrossover(Node father, Node mother) {
 		Node[] children = { father, mother };
 
-		if (cxProb < random.nextFloat()) {
-			children = crossover(father, mother);
+		if (random.nextDouble() > cxProb) {
+			children = crossover(father.clone(null), mother.clone(null));
 		}
 		return children;
 	}
@@ -299,23 +304,23 @@ public class Evolution {
 
 	public Node mutate(Node node) {
 		if (evolutionType == EvolutionType.MUX6) {
-			return probMutate6(node);
+			return probMutate6(node.clone(null));
 		} else if (evolutionType == EvolutionType.MUX11) {
-			return probMutate11(node);
+			return probMutate11(node.clone(null));
 		} else {
 			return node;
 		}
 	}
 
 	private Node probMutate6(Node node) {
-		if (mtProb < random.nextDouble()) {
+		if (random.nextDouble() > mtProb) {
 			return mutateMux6(node);
 		} else
 			return node;
 	}
 
 	private Node probMutate11(Node node) {
-		if (mtProb < random.nextDouble()) {
+		if (random.nextDouble() > mtProb) {
 			return mutateMux11(node);
 		} else
 			return node;
@@ -351,6 +356,11 @@ public class Evolution {
 			}
 
 		}
+
+		if (root.getDepth() > 6) {
+			System.out.println("BOGUS!!!!!");
+		}
+
 		return root;
 	}
 
@@ -408,6 +418,7 @@ public class Evolution {
 		return selectedIndividuals;
 	}
 
+	@SuppressWarnings("unused")
 	private Individual[] getSortedPopulation() {
 		Individual[] individuals = population.clone();
 		Arrays.sort(individuals);
@@ -426,9 +437,8 @@ public class Evolution {
 		return bestIndividual;
 	}
 
-	class EvolutionType {
+	static class EvolutionType {
 		public static final int MUX6 = 0;
 		public static final int MUX11 = 1;
 	}
-
 }
