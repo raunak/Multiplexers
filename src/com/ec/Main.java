@@ -19,11 +19,14 @@ package com.ec;
 import com.ec.Evolution.EvolutionType;
 
 /**
+ * Depending on the parameter passed to <code>Evolution</code>, <code>Main</code> executes the corresponding problem.
+ * 
+ * @author raunak
  * @version 1.0
  */
 public class Main {
-	
-	public static void main(String args[]){
+
+	public static void main(String args[]) {
 		Evolution evolution = new Evolution(EvolutionType.MUX11, 10000);
 		evolution.evolve();
 	}
