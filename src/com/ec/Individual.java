@@ -32,14 +32,17 @@ public class Individual implements Comparable<Individual> {
 	private Node node;
 
 	/** a value which corresponds to the fitness of a program in a domain. */
-	private float fitness;
+	private double fitness;
 
 	/**
 	 * Constructs a <code>Individual</code> using the passed parameters.
-	 * @param node - root of a program.
-	 * @param fitness - fitness of a program
+	 * 
+	 * @param node
+	 *            - root of a program.
+	 * @param fitness
+	 *            - fitness of a program
 	 */
-	public Individual(Node node, Float fitness) {
+	public Individual(Node node, double fitness) {
 		this.node = node;
 		this.fitness = fitness;
 	}
@@ -58,14 +61,15 @@ public class Individual implements Comparable<Individual> {
 	 * 
 	 * @return fitness
 	 */
-	public float getFitness() {
+	public double getFitness() {
 		return fitness;
 	}
 
 	/**
 	 * Set the <code>Node</code>.
 	 * 
-	 * @param node - the root
+	 * @param node
+	 *            - the root
 	 */
 	public void setNode(Node node) {
 		this.node = node;
@@ -74,15 +78,16 @@ public class Individual implements Comparable<Individual> {
 	/**
 	 * Set the fitness.
 	 * 
-	 * @param fitness - fitness of the program.
+	 * @param fitness
+	 *            - fitness of the program.
 	 */
-	public void setFitness(Float fitness) {
+	public void setFitness(double fitness) {
 		this.fitness = fitness;
 	}
 
 	@Override
 	public int compareTo(Individual individual) {
-		return Float.compare(individual.fitness, this.fitness);
+		return Double.compare(individual.fitness, this.fitness);
 	}
 
 	@Override
