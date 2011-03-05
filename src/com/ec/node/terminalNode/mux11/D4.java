@@ -20,20 +20,25 @@ import com.ec.node.Mux11Node;
 import com.ec.node.Node;
 
 /**
+ * @author raunak
  * @version 1.0
  */
-public class D4 extends Mux11Node{
+public class D4 extends Mux11Node {
 
 	/** Bit mask for <code>D4</code> terminal node. */
 	public static final byte mask = 8;
-	
-	public D4(Node node){
+
+	public D4(Node node) {
 		this.parent = node;
 	}
-	
+
 	@Override
 	public boolean eval(int input) {
 		return ((input & D4.mask) != 0);
 	}
 
+	@Override
+	public Node clone(Node parent) {
+		return new D4(parent);
+	}
 }
