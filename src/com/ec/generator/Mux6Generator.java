@@ -20,17 +20,22 @@ import com.ec.node.Node;
 import com.ec.node.terminalNode.mux6.*;
 
 /**
+ * <code>Mux6Generator</code> generates trees (both full and grow) which belong
+ * to Multiplexer 6 problem.
+ * 
+ * @author raunak
  * @version 1.0
  */
 public class Mux6Generator extends Generator {
-	/** */
+
 	private static final int resMask = 8;
 
-	/** */
 	private static final int addrShift = 4;
 
-	/** */
-	private static final boolean[] correctAnswer = getTrueResult();
+	/**
+	 * Holds the correct answers for Multiplexer 6 problem.
+	 */
+	private static final boolean[] correctAnswer = getCorrectAnswer();
 
 	@Override
 	public Node getRandomTerminal(Node root) {
@@ -65,23 +70,27 @@ public class Mux6Generator extends Generator {
 	}
 
 	/**
+	 * Gets the correct answer for all input cases for Multiplexer 6 problem.
 	 * 
-	 * @return
+	 * @return a boolean array
 	 */
-	private static boolean[] getTrueResult() {
+	private static boolean[] getCorrectAnswer() {
 		boolean[] arr = new boolean[64];
 		for (int i = 0; i < 64; i++) {
-			arr[i] = computeResult(i);
+			arr[i] = computeAnswer(i);
 		}
 		return arr;
 	}
 
 	/**
+	 * Computes the correct answer for Multiplexer 6 problem for a given input.
 	 * 
 	 * @param input
-	 * @return
+	 *            - range 0 : 63.
+	 * 
+	 * @return a boolean value.
 	 */
-	private static boolean computeResult(int input) {
+	private static boolean computeAnswer(int input) {
 		int addr = input >> addrShift;
 		int invaddr = 3 - addr;
 		int resmask = resMask >> addr;

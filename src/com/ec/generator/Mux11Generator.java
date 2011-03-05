@@ -30,15 +30,22 @@ import com.ec.node.terminalNode.mux11.D6;
 import com.ec.node.terminalNode.mux11.D7;
 
 /**
+ * <code>Mux11Generator</code> generates trees (both full and grow) which belong
+ * to Multiplexer 11 problem.
+ * 
+ * @author raunak
  * @version 1.0
  */
 public class Mux11Generator extends Generator {
 
-	/** */
 	private static final int resMask = 128;
 
-	/** */
 	private static final int addrShift = 8;
+
+	/**
+	 * Holds the correct answers for Multiplexer 11 problem.
+	 */
+	private static final boolean[] correctAnswer = getCorrectAnswer();
 
 	@Override
 	public Node getRandomTerminal(Node root) {
@@ -73,10 +80,9 @@ public class Mux11Generator extends Generator {
 	@Override
 	public double fitness(Node node) {
 		int count = 0;
-		boolean[] actualAnswer = getTrueResult();
 
-		for (int i = 0; i < actualAnswer.length; i++) {
-			if (actualAnswer[i] == node.eval(i)) {
+		for (int i = 0; i < correctAnswer.length; i++) {
+			if (correctAnswer[i] == node.eval(i)) {
 				count++;
 			}
 		}
@@ -84,23 +90,27 @@ public class Mux11Generator extends Generator {
 	}
 
 	/**
+	 * Gets the correct answer for all input cases for Multiplexer 11 problem.
 	 * 
-	 * @return
+	 * @return a boolean array
 	 */
-	private boolean[] getTrueResult() {
+	private static boolean[] getCorrectAnswer() {
 		boolean[] arr = new boolean[2048];
 		for (int i = 0; i < 2048; i++) {
-			arr[i] = computeResult(i);
+			arr[i] = computeAnswer(i);
 		}
 		return arr;
 	}
 
 	/**
+	 * Computes the correct answer for Multiplexer 11 problem for a given input.
 	 * 
 	 * @param input
-	 * @return
+	 *            - range 0 : 2047.
+	 * 
+	 * @return a boolean value.
 	 */
-	private boolean computeResult(int input) {
+	private static boolean computeAnswer(int input) {
 		int addr = input >> addrShift;
 		int invaddr = 7 - addr;
 		int resmask = resMask >> addr;
