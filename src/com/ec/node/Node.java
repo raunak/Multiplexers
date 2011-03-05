@@ -19,10 +19,10 @@ package com.ec.node;
 import java.util.Vector;
 
 /**
- * <code>Node</code> is a base class. All other <code>Node</code> such as
- * FunctionNode (<code>AndNode</code>, <code>OrNode</code>, <code>IfNode</code>,
- * <code>NotNode</code>) and TerminalNode (<code>A0</code>, <code>A1</code>,
- * <code>D0</code> ... <code>D8</code>) extend this class.
+ * <code>Node</code> is a base class. All other <code>Node</code> classes such
+ * as FunctionNode (<code>AndNode</code>, <code>OrNode</code>,
+ * <code>IfNode</code>, <code>NotNode</code>) and TerminalNode (<code>A0</code>,
+ * <code>A1</code>, <code>D0</code> ... <code>D8</code>) extend this class.
  * 
  * @author raunak
  * @version 1.0
