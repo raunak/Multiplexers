@@ -21,13 +21,14 @@ import java.util.Vector;
 /**
  * <code>Mux11Node</code> represents terminal <code>Node</code> that belong to
  * the Multiplexer 11 problem.
- * @version 1.0 
+ * 
+ * @version 1.0
  */
-public abstract class Mux11Node extends Node{
-	
+public abstract class Mux11Node extends Node {
+
 	/** Bit mask for Multiplexer 11 */
 	public static final short mask = 1792;
-	
+
 	@Override
 	public int countNodes() {
 		return 0;
@@ -37,7 +38,7 @@ public abstract class Mux11Node extends Node{
 	public Vector<Node> enumerate() {
 		return new Vector<Node>(0);
 	}
-	
+
 	@Override
 	public Vector<Node> enumBounded(int remainingLevels, int incomingDepth) {
 		return new Vector<Node>(0);
@@ -47,10 +48,10 @@ public abstract class Mux11Node extends Node{
 	public int getDepth() {
 		return 0;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return this.getClass().getSimpleName();
 	}
-	
+
 }
