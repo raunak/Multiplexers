@@ -19,39 +19,85 @@ package com.ec.node;
 import java.util.Vector;
 
 /**
+ * <code>Node</code> is a base class. All other <code>Node</code> such as
+ * FunctionNode (<code>AndNode</code>, <code>OrNode</code>, <code>IfNode</code>,
+ * <code>NotNode</code>) and TerminalNode (<code>A0</code>, <code>A1</code>,
+ * <code>D0</code> ... <code>D8</code>) extend this class.
+ * 
+ * @author raunak
  * @version 1.0
  */
-public abstract class Node{
+public abstract class Node {
 
-	/** Parent node */
+	/**
+	 * Holds reference to parent <code>Node</code>.
+	 */
 	public Node parent;
 
-	/** Children of a Node */
+	/**
+	 * A <code>Node</code>'s children.
+	 */
 	public Vector<Node> children;
 
-	/** returns max depth of Node */
+	/**
+	 * Gets the tree depth.
+	 * 
+	 * @return depth
+	 */
 	public abstract int getDepth();
 
-	/** evaluates a program for a given input */
+	/**
+	 * Evaluate the program (represented by a Tree) for a given input.
+	 * 
+	 * @param input
+	 *            - The value against which the program (Tree) is tested.
+	 * 
+	 * @return boolean
+	 */
 	public abstract boolean eval(int input);
 
-	/** returns an vector will all the child nodes */
+	/**
+	 * Gathers all the child <code>Node</code>s in a vector.
+	 * 
+	 * @return a vector containing child <code>Node</code>.
+	 */
 	public abstract Vector<Node> enumerate();
 
-	/** */
+	/**
+	 * Finds potential swap points for crossover.
+	 * 
+	 * @param remainingDepth
+	 *            -
+	 * @param subtreeDepth
+	 *            -
+	 * @return a vector containing swap points
+	 */
 	public abstract Vector<Node> enumBounded(int remainingDepth,
 			int subtreeDepth);
 
-	/** returns the number of nodes */
+	/**
+	 * Counts the total number of <code>Node</code>s that are present in a given
+	 * program.
+	 * 
+	 * @return number of <code>Node</code>'s.
+	 */
 	public abstract int countNodes();
 
-	/** Clones an object */
-	public abstract Node clone(Node root);
-	
 	/**
-	 * Gets the level of <code>Node</code> relative to root node.
+	 * Performs a deep copy of <code>Node</code>.
 	 * 
-	 * @return int
+	 * @param parent
+	 *            - Parent <code>Node</code>
+	 * 
+	 * @return a deep copy of <code>Node</code> on which <code>.clone()</code>
+	 *         was called on.
+	 */
+	public abstract Node clone(Node parent);
+
+	/**
+	 * Gets the depth of a <code>Node</code> relative to root node.
+	 * 
+	 * @return depth
 	 */
 	public int getLevel() {
 		if (parent == null)
@@ -61,7 +107,7 @@ public abstract class Node{
 	}
 
 	/**
-	 * Gets children of a <code>Node</code>. 
+	 * Gets children of a <code>Node</code>.
 	 * 
 	 * @return children
 	 */
